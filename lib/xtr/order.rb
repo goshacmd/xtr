@@ -2,7 +2,7 @@ module Xtr
   # Public: An orderbook order.
   class Order
     attr_reader :account, :market, :direction, :price, :quantity, :uuid,
-      :reserve_id, :remainder, :fills, :status
+      :reserve_id, :remainder, :fills, :status, :created_at
 
     # Public: Initialize an order.
     #
@@ -22,6 +22,7 @@ module Xtr
       @filled = false
       @status = :new
       @uuid = uuid
+      @created_at = Time.now
     end
 
     # Public: Check if order direction is :buy.
