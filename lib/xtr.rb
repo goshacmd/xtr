@@ -1,6 +1,8 @@
+require 'logger'
+
 require 'xtr/version'
 require 'xtr/util'
-require 'logger'
+require 'xtr/errors'
 
 module Xtr
   autoload :Account, 'xtr/account'

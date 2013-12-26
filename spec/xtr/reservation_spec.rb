@@ -43,9 +43,9 @@ describe Xtr::Reservation do
       end
 
       context 'with amount greater than remainder' do
-        it 'raises a NotEnoughFundsReservedException' do
+        it 'raises a NotEnoughFundsReservedError' do
           expect { reservation.release(20 * K) }.to \
-            raise_error(Xtr::NotEnoughFundsReservedException)
+            raise_error(Xtr::NotEnoughFundsReservedError)
         end
       end
     end
@@ -68,9 +68,9 @@ describe Xtr::Reservation do
       end
 
       context 'with amount greater than remainder' do
-        it 'raises a NotEnoughFundsReservedException' do
+        it 'raises a NotEnoughFundsReservedError' do
           expect { reservation.debit(20 * K) }.to \
-            raise_error(Xtr::NotEnoughFundsReservedException)
+            raise_error(Xtr::NotEnoughFundsReservedError)
         end
       end
     end

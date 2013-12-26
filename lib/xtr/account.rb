@@ -1,6 +1,4 @@
 module Xtr
-  class UnsupportedCurrencyException < RuntimeError; end
-
   # Public: An account.
   #
   # Examples
@@ -23,7 +21,7 @@ module Xtr
         if CURRENCIES.include?(key)
           hash[key] = CurrencyBalance.new(self, key)
         else
-          raise UnsupportedCurrencyException, "#{key} is not a supported currency"
+          raise UnsupportedCurrencyError, "#{key} is not a supported currency"
         end
       end
     end

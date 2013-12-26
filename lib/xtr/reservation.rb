@@ -1,6 +1,4 @@
 module Xtr
-  class NotEnoughFundsReservedException < RuntimeError; end
-
   # Public: A reservation from the balance.
   class Reservation
     attr_reader :balance, :amount, :uuid, :released, :debited
@@ -56,10 +54,10 @@ module Xtr
     # amount - The BigDecimal amount.
     #
     # Returns true if the needed amount is available.
-    # Raises NotEnoughFundsReservedException otherwise.
+    # Raises NotEnoughFundsReservedError otherwise.
     def ensure_can_use(amount)
       return true if remainder >= amount
-      raise NotEnoughFundsReservedException,
+      raise NotEnoughFundsReservedError,
         "Not enough funds on #{uuid} reservation (remainder: #{remainder.to_f}, needed: #{amount.to_f})"
     end
   end

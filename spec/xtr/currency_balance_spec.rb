@@ -24,9 +24,9 @@ describe Xtr::CurrencyBalance do
     context 'with a negative amount' do
       let(:amount) { -TENK }
 
-      it 'raises a NegativeAmountException' do
+      it 'raises a NegativeAmountError' do
         expect { balance.credit(amount) }.to \
-          raise_error(Xtr::NegativeAmountException)
+          raise_error(Xtr::NegativeAmountError)
       end
     end
   end
@@ -52,9 +52,9 @@ describe Xtr::CurrencyBalance do
       context 'with a negative amount' do
         let(:amount) { -FIVEK }
 
-        it 'raises a NegativeAmountException' do
+        it 'raises a NegativeAmountError' do
           expect { balance.debit(amount) }.to \
-            raise_error(Xtr::NegativeAmountException)
+            raise_error(Xtr::NegativeAmountError)
           end
       end
     end
@@ -62,9 +62,9 @@ describe Xtr::CurrencyBalance do
     context 'when there are not enough funds' do
       let(:amount) { FIVEK }
 
-      it 'raises a NotEnoughFundsException' do
+      it 'raises a NotEnoughFundsError' do
         expect { balance.debit(amount) }.to \
-          raise_error(Xtr::NotEnoughFundsException)
+          raise_error(Xtr::NotEnoughFundsError)
       end
     end
   end
@@ -94,9 +94,9 @@ describe Xtr::CurrencyBalance do
       context 'with a negative amount' do
         let(:amount) { -FIVEK }
 
-        it 'raises a NegativeAmountException' do
+        it 'raises a NegativeAmountError' do
           expect { balance.reserve(amount) }.to \
-            raise_error(Xtr::NegativeAmountException)
+            raise_error(Xtr::NegativeAmountError)
         end
       end
     end
@@ -104,9 +104,9 @@ describe Xtr::CurrencyBalance do
     context 'when there are not enough funds' do
       let(:amount) { FIVEK }
 
-      it 'raises a NotEnoughFundsException' do
+      it 'raises a NotEnoughFundsError' do
         expect { balance.reserve(amount) }.to \
-          raise_error(Xtr::NotEnoughFundsException)
+          raise_error(Xtr::NotEnoughFundsError)
       end
     end
   end
@@ -132,9 +132,9 @@ describe Xtr::CurrencyBalance do
         end
 
         context 'with amount larger than reservation' do
-          it 'raises a NotEnoughFundsReservedException' do
+          it 'raises a NotEnoughFundsReservedError' do
             expect { balance.release(reservation, TENK) }.to \
-              raise_error(Xtr::NotEnoughFundsReservedException)
+              raise_error(Xtr::NotEnoughFundsReservedError)
           end
         end
       end
@@ -166,9 +166,9 @@ describe Xtr::CurrencyBalance do
         end
 
         context 'with amount larger than reservation' do
-          it 'raises a NotEnoughFundsReservedException' do
+          it 'raises a NotEnoughFundsReservedError' do
             expect { balance.debit_reserved(reservation, TENK) }.to \
-              raise_error(Xtr::NotEnoughFundsReservedException)
+              raise_error(Xtr::NotEnoughFundsReservedError)
           end
         end
       end

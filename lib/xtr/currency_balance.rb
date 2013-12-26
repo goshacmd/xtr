@@ -1,8 +1,4 @@
 module Xtr
-  class NotEnoughFundsException < RuntimeError; end
-  class NoSuchReservationException < RuntimeError; end
-  class NegativeAmountException < RuntimeError; end
-
   # Public: A currency balance of an account.
   #
   # Examples
@@ -43,7 +39,7 @@ module Xtr
     #
     # amount - The BigDecimal amount to debit.
     #
-    # Raises NotEnoughFundsException if there are not enough funds.
+    # Raises NotEnoughFundsError if there are not enough funds.
     def debit(amount)
       amount = Util.big_decimal(amount)
 
@@ -55,7 +51,7 @@ module Xtr
     # amount - The BigDecimal amount to reserve.
     #
     # Returns a String reservation identifier.
-    # Raises NotEnoughFundsException if there are not enough funds.
+    # Raises NotEnoughFundsError if there are not enough funds.
     def reserve(amount)
       amount = Util.big_decimal(amount)
 
@@ -77,7 +73,7 @@ module Xtr
     # amount     - The optional BigDecimal amount to release. If not
     #              passed, all remaining funds will be released.
     #
-    # Raises NoSuchReservationException if no reservation with this identifier
+    # Raises NoSuchReservationError if no reservation with this identifier
     # was found.
     def release(reserve_id, amount = nil)
       if ensure_reservation(reserve_id)
@@ -97,7 +93,7 @@ module Xtr
     # amount     - The optional BigDecimal amount to debit. If not
     #              passed, all remaining funds will be debited.
     #
-    # Raises NoSuchReservationException if no reservation with this identifier
+    # Raises NoSuchReservationError if no reservation with this identifier
     # was found.
     def debit_reserved(reserve_id, amount = nil)
       if ensure_reservation(reserve_id)
@@ -128,12 +124,12 @@ module Xtr
     #          Possible values: :available, :reserve.
     #
     # Returns true if the needed amount is available.
-    # Raises NotEnoughFundsException otherwise.
+    # Raises NotEnoughFundsError otherwise.
     def ensure_at_least(amount, type = :available)
       bucket = type == :available ? available : reserved
 
       return true if bucket >= Util.big_decimal(amount)
-      raise NotEnoughFundsException,
+      raise NotEnoughFundsError,
         "Not enough funds on #{currency} balance (#{type}: #{bucket}, needed: #{amount})"
     end
 
@@ -142,23 +138,23 @@ module Xtr
     # reserve_id - The String reservation identifier.
     #
     # Returns true if the reservation exists.
-    # Raises NoSuchReservationException otherwise.
+    # Raises NoSuchReservationError otherwise.
     def ensure_reservation(reservation_id)
       reservation = reservations[reservation_id]
       old_reservation = old_reservations[reservation_id]
 
       return true if reservation || old_reservation
-      raise NoSuchReservationException,
+      raise NoSuchReservationError,
         "No reservation with identifier #{reservation_id} exists"
     end
 
     # Private: Ensure an amount is positive.
     #
     # Returns true if it is.
-    # Raises NegativeAmountException otherwise.
+    # Raises NegativeAmountError otherwise.
     def ensure_positive(amount)
       return true if amount >= Util.zero
-      raise NegativeAmountException,
+      raise NegativeAmountError,
         "Positive amount expected, but amount passed (#{amount.to_f}) was negative."
     end
 
