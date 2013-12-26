@@ -54,17 +54,27 @@ end
 ob m
 b bs
 
-sm.create_order a1, m, :buy, 575, 20
-sm.create_order a1, m, :buy, 579, 30
+ob1 = sm.create_order a1, m, :buy, 575, 20
+ob2 = sm.create_order a1, m, :buy, 579, 30
 
-sm.create_order a2, m, :sell, 581, 35
-sm.create_order a2, m, :sell, 585, 40
+os1 = sm.create_order a2, m, :sell, 581, 35
+os2 = sm.create_order a2, m, :sell, 585, 40
 
 ob m
 b bs
 
-sm.create_order a2, m, :sell, 575, 10
-sm.create_order a2, m, :sell, 575, 25
+os3 = sm.create_order a2, m, :sell, 575, 10
+os4 = sm.create_order a2, m, :sell, 575, 25
+
+ob m
+b bs
+
+sm.cancel_order os2
+
+ob m
+b bs
+
+[ob1, ob2, os1, os2, os3, os4].each { |o| sm.cancel_order o }
 
 ob m
 b bs

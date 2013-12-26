@@ -1,3 +1,5 @@
+require 'forwardable'
+
 module Xtr
   # Public: A market for a currency pair.
   #
@@ -5,7 +7,11 @@ module Xtr
   #
   #   market = Market.new :BTC, :USD
   class Market
+    extend Forwardable
+
     attr_reader :left_currency, :right_currency, :orderbook
+
+    def_delegators :orderbook, :bids, :asks, :add_order, :cancel_order
 
     # Public: Initialize a market.
     #

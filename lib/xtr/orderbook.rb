@@ -37,6 +37,22 @@ module Xtr
       tree.cleanup
     end
 
+    # Public: Cancel an order.
+    #
+    # order - The order object.
+    def cancel_order(order)
+      return unless order.unfilled?
+
+      price = order.price
+      tree = tree_for_direction(order.direction)
+      limit = tree.get(price)
+
+      limit.remove(order)
+      order.cancel!
+
+      tree.delete(price) if limit.size.zero?
+    end
+
     private
 
     # Private: Get the tree for order direction.

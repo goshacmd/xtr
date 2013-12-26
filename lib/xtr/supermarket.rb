@@ -17,7 +17,7 @@ module Xtr
 
     # Public: Route an order to the appropriate market.
     def route_order(order)
-      order.market.orderbook.add_order(order)
+      order.market.add_order(order)
     end
 
     # Public: Create and route an order.
@@ -25,6 +25,11 @@ module Xtr
       order = Order.new(*args)
       route_order(order)
       order
+    end
+
+    # Public: Cancel an order.
+    def cancel_order(order)
+      order.market.cancel_order(order)
     end
   end
 end
