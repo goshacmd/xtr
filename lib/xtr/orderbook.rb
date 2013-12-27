@@ -25,7 +25,9 @@ module Xtr
     def add_order(order)
       price = order.price
       tree = tree_for_direction(order.direction)
-      order.reserve
+
+      return unless order.prepare_add
+
       fills, filled = fill_order(order)
 
       Xtr.logger.debug "matched #{order.uuid} - fills: #{fills.map { |qty, a| [qty.to_f, a.to_f] }}, totalling #{filled.to_f}"

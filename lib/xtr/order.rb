@@ -20,7 +20,7 @@ module Xtr
       @remainder = quantity
       @fills = []
       @filled = false
-      @status = :new
+      @status = :initialized
       @uuid = uuid
       @created_at = Time.now
     end
@@ -48,6 +48,11 @@ module Xtr
     # Public: Check if order is paertially filled.
     def partially_filled?
       status == :partially_filled
+    end
+
+    # Public: Check if order is rejected.
+    def rejected?
+      status == :rejected
     end
 
     # Public: Check if order is canceled.
@@ -138,6 +143,19 @@ module Xtr
     def cancel!
       @status = :canceled
       release_delete
+    end
+
+    # Public: Change status from initialized to new.
+    # Reserve the funds.
+    def prepare_add
+      return unless status == :initialized
+
+      reserve
+      @status = :new
+      true
+    rescue NotEnoughFundsError
+      @status = :rejected
+      false
     end
 
     # Public: Get the amount to be filled, limited by cap.
