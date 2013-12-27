@@ -25,14 +25,22 @@ module Xtr
       balance_sheet[account_id].debit(currency, amount)
     end
 
-    op :CREATE_LMT_ORDER do |account_id, left, right, direction, price, quantity|
+    op :CREATE_LMT do |account_id, direction, left, right, price, quantity|
       account = balance_sheet[account_id]
       market = supermarket[left, right]
       order = supermarket.create_order account, market, direction, price, quantity
       order.uuid
     end
 
-    op :CANCEL_ORDER do |account_id, order_id|
+    op :BUY do |account_id, left, right, price, quantity|
+      execute(:CREATE_LMT, account_id, :buy, left, right, price, quantity)
+    end
+
+    op :SELL do |account_id, left, right, price, quantity|
+      execute(:CREATE_LMT, account_id, :sell, left, right, price, quantity)
+    end
+
+    op :CANCEL do |account_id, order_id|
       account = balance_sheet[account_id]
       order = account.open_orders.find { |o| o.uuid == order_id }
       supermarket.cancel_order order if order

@@ -54,31 +54,31 @@ end
 ob m
 b bs
 
-ob1 = engine.execute :CREATE_LMT_ORDER, a1, :BTC, :USD, :buy, 575, 20
-ob2 = engine.execute :CREATE_LMT_ORDER, a1, :BTC, :USD, :buy, 579, 30
+ob1 = engine.execute :BUY, a1, :BTC, :USD, 575, 20
+ob2 = engine.execute :BUY, a1, :BTC, :USD, 579, 30
 
-os1 = engine.execute :CREATE_LMT_ORDER, a2, :BTC, :USD, :sell, 581,35
-os2 = engine.execute :CREATE_LMT_ORDER, a2, :BTC, :USD, :sell, 585, 40
-
-ob m
-b bs
-
-os3 = engine.execute :CREATE_LMT_ORDER, a2, :BTC, :USD, :sell, 575, 10
-os4 = engine.execute :CREATE_LMT_ORDER, a2, :BTC, :USD, :sell, 575, 25
+os1 = engine.execute :SELL, a2, :BTC, :USD, 581, 35
+os2 = engine.execute :SELL, a2, :BTC, :USD, 585, 40
 
 ob m
 b bs
 
-engine.execute :CANCEL_ORDER, a2, os2
+os3 = engine.execute :SELL, a2, :BTC, :USD, 575, 10
+os4 = engine.execute :SELL, a2, :BTC, :USD, 575, 25
 
 ob m
 b bs
 
-engine.execute :CANCEL_ORDER, a1, ob1
-engine.execute :CANCEL_ORDER, a1, ob2
-engine.execute :CANCEL_ORDER, a2, os2
-engine.execute :CANCEL_ORDER, a2, os3
-engine.execute :CANCEL_ORDER, a2, os4
+engine.execute :CANCEL, a2, os2
+
+ob m
+b bs
+
+engine.execute :CANCEL, a1, ob1
+engine.execute :CANCEL, a1, ob2
+engine.execute :CANCEL, a2, os2
+engine.execute :CANCEL, a2, os3
+engine.execute :CANCEL, a2, os4
 
 ob m
 b bs

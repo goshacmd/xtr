@@ -22,14 +22,24 @@ module Xtr
     # other arguments to the operation block.
     def execute(op_name, *args)
       block = self.class.op(op_name)
-      instance_exec(*args, &block)
+
+      if block
+        instance_exec(*args, &block)
+      else
+        raise NoSuchOperationError, "No operation named #{op_name} was registered"
+      end
     end
 
     # Public: Execute a query with name `query_name` and pass other
     # arguments to the query block.
     def query(name, *args)
       block = self.class.query(name)
-      instance_exec(*args, &block)
+
+      if block
+        instance_exec(*args, &block)
+      else
+        raise NoSuchOperationError, "No operation named #{op_name} was registered"
+      end
     end
 
     module ClassMethods
