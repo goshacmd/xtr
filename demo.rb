@@ -76,10 +76,12 @@ b bs
 
 engine.execute :CANCEL_ORDER, a1, ob1
 engine.execute :CANCEL_ORDER, a1, ob2
-engine.execute :CANCEL_ORDER, a2, os1
 engine.execute :CANCEL_ORDER, a2, os2
 engine.execute :CANCEL_ORDER, a2, os3
 engine.execute :CANCEL_ORDER, a2, os4
 
 ob m
 b bs
+
+puts engine.query :BALANCES, a1
+puts engine.query :OPEN_ORDERS, a2

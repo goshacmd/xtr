@@ -25,12 +25,26 @@ module Xtr
       instance_exec(*args, &block)
     end
 
+    # Public: Execute a query with name `query_name` and pass other
+    # arguments to the query block.
+    def query(name, *args)
+      block = self.class.query(name)
+      instance_exec(*args, &block)
+    end
+
     module ClassMethods
       # Public: Get/set operation block.
       def op(name, &block)
         @ops ||= {}
         @ops[name] = block if block_given?
         @ops[name]
+      end
+
+      # Public: Get/set query block.
+      def query(name, &block)
+        @queries ||= {}
+        @queries[name] = block if block_given?
+        @queries[name]
       end
     end
   end

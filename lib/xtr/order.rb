@@ -17,7 +17,7 @@ module Xtr
       @direction = direction
       @price = Util.big_decimal(price)
       @quantity = Util.big_decimal(quantity)
-      @remainder = quantity
+      @remainder = Util.big_decimal(quantity)
       @fills = []
       @filled = false
       @status = :initialized
