@@ -1,12 +1,13 @@
 module Xtr
   # Public: An order book.
   class Orderbook
-    attr_reader :bids, :asks
+    attr_reader :bids, :asks, :last_price
 
     # Public: Initialize an order book.
     def initialize
       @bids = Trees::Bids.new
       @asks = Trees::Asks.new
+      @last_price = nil
     end
 
     # Public: Get best ask.
@@ -84,6 +85,7 @@ module Xtr
           filled += amount
           fills << [amount, price]
           order.fill(amount, price)
+          @last_price = price
         end
       end
 

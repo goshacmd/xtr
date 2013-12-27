@@ -7,7 +7,8 @@ module Xtr
   class Market
     attr_reader :left_currency, :right_currency, :orderbook
 
-    delegate :bids, :asks, :add_order, :cancel_order, to: :orderbook
+    delegate :bids, :asks, :best_bid, :best_ask, :last_price,
+      :add_order, :cancel_order, to: :orderbook
 
     # Public: Initialize a market.
     #

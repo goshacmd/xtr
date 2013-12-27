@@ -75,5 +75,18 @@ module Xtr
         }
       end
     end
+
+    query :TICKER do |left, right|
+      market = supermarket[left, right]
+      last_price = market.last_price
+      bid = market.best_bid
+      ask = market.best_ask
+
+      {
+        bid: bid ? bid.to_s('F') : '',
+        ask: ask ? ask.to_s('F') : '',
+        last_price: last_price ? last_price.to_s('F') : ''
+      }
+    end
   end
 end

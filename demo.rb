@@ -85,3 +85,4 @@ b bs
 
 puts engine.query :BALANCES, a1
 puts engine.query :OPEN_ORDERS, a2
+puts engine.query :TICKER, :BTC, :USD
