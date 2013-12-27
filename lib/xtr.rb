@@ -1,21 +1,26 @@
 require 'logger'
+require 'active_support/dependencies/autoload'
+require 'active_support/core_ext/module/delegation'
 
 require 'xtr/version'
 require 'xtr/util'
 require 'xtr/errors'
 
 module Xtr
-  autoload :Account, 'xtr/account'
-  autoload :BalanceSheet, 'xtr/balance_sheet'
-  autoload :CurrencyBalance, 'xtr/currency_balance'
-  autoload :Engine, 'xtr/engine'
-  autoload :Limit, 'xtr/limit'
-  autoload :Market, 'xtr/market'
-  autoload :Order, 'xtr/order'
-  autoload :Orderbook, 'xtr/orderbook'
-  autoload :Reservation, 'xtr/reservation'
-  autoload :Supermarket, 'xtr/supermarket'
-  autoload :Trees, 'xtr/trees'
+  extend ActiveSupport::Autoload
+
+  autoload :Account
+  autoload :BalanceSheet
+  autoload :CurrencyBalance
+  autoload :Engine
+  autoload :Limit
+  autoload :Market
+  autoload :Operationable
+  autoload :Order
+  autoload :Orderbook
+  autoload :Reservation
+  autoload :Supermarket
+  autoload :Trees
 
   CURRENCIES = [:BTC, :USD]
 

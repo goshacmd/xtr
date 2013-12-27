@@ -1,33 +1,16 @@
-require 'forwardable'
-
 module Xtr
   # Public: A trading engine. Essentially, a container for a supermarket and
   # a balance sheet.
   class Engine
-    extend Forwardable
+    include Operationable
 
     attr_reader :supermarket, :balance_sheet
 
-    def_delegators :balance_sheet, :account
+    delegate :account, to: :balance_sheet
 
     def initialize
       @supermarket = Supermarket.new
       @balance_sheet = BalanceSheet.new
-    end
-
-    def execute(op_name, *args)
-      block = self.class.op(op_name)
-      instance_exec(*args, &block)
-    end
-
-    class << self
-      def op(name, &block)
-        @ops ||= {}
-
-        @ops[name] = block if block_given?
-
-        @ops[name]
-      end
     end
 
     op :CREATE_ACCOUNT do
