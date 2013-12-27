@@ -10,7 +10,7 @@ module Xtr
 
     # Public: Get an account.
     def account(id = Util.uuid)
-      @accounts[id] ||= Account.new
+      @accounts[id] ||= Account.new(id)
     end
     alias_method :[], :account
 
