@@ -2,7 +2,7 @@ module Xtr
   # Public: An orderbook order.
   class Order
     attr_reader :account, :market, :direction, :price, :quantity, :uuid,
-      :reserve_id, :remainder, :fills, :status, :created_at
+      :reserve_id, :remainder, :fills, :status, :created_at, :canceled_at
 
     # Public: Initialize an order.
     #
@@ -32,7 +32,7 @@ module Xtr
 
     # Public: Check if order direction is :sell.
     def sell?
-      !buy?
+      direction == :sell
     end
 
     # Public: Check if order is new.
@@ -122,19 +122,11 @@ module Xtr
     end
 
     # Public: Fill the order with `amount` at `price`.
-    def fill(amount, price)
+    def add_fill(amount, price)
       @fills << [price, amount]
       @remainder -= amount
 
       @status = remainder == 0 ? :filled : :partially_filled
-
-      debit_amount = offered_amount(price, amount)
-      credit_amount = received_amount(price, amount)
-
-      debit(debit_amount)
-      credit(credit_amount)
-
-      Xtr.logger.debug "filled order #{uuid} with #{amount.to_f} at #{price.to_f} (debited: #{debit_amount.to_f}, credited: #{credit_amount.to_f})"
 
       release_delete
     end
@@ -142,6 +134,7 @@ module Xtr
     # Public: Cancel the order.
     def cancel!
       @status = :canceled
+      @canceled_at = Time.now
       release_delete
     end
 

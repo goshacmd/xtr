@@ -2,16 +2,25 @@ module Xtr
   # Public: Represents a group of orders at a specific price point in the
   # orderbook.
   class Limit
-    attr_reader :price, :size, :orders, :filled_orders
+    attr_reader :price, :direction, :size, :orders, :filled_orders
 
     # Public: Initialize a limit.
     #
     # price - The BigDecimal price.
-    def initialize(price)
+    def initialize(price, direction)
       @price = price
+      @direction = direction
       @size = Util.zero
       @orders = []
       @filled_orders = []
+    end
+
+    def buy?
+      direction == :buy
+    end
+
+    def sell?
+      direction == :sell
     end
 
     # Public: Add an order to the limit.
@@ -31,8 +40,9 @@ module Xtr
 
     # Public: Fill `amount`.
     #
-    # amount - The BigDecimal amount.
-    def fill(amount)
+    # amount      - The BigDecimal amount.
+    # other_order - The Order object.
+    def fill(amount, other_order)
       amount = Util.big_decimal(amount)
       filled = Util.zero
       remaining = amount
@@ -43,7 +53,10 @@ module Xtr
         order = orders.shift
         break unless order
         fill = order.remainder_with_cap(remaining)
-        order.fill(fill, price)
+
+        execution = Execution.new(order, other_order, fill)
+        execution.execute
+
         filled += fill
         remaining -= fill
 
@@ -58,7 +71,7 @@ module Xtr
     end
 
     def inspect
-      "#<#{self.class.name} price=#{price.to_f} order_count=#{orders.count} size=#{size.to_f}>"
+      "#<#{self.class.name} price=#{price.to_f} direction-#{direction} order_count=#{orders.count} size=#{size.to_f}>"
     end
   end
 end

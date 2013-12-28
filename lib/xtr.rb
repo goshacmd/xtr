@@ -13,6 +13,7 @@ module Xtr
   autoload :BalanceSheet
   autoload :CurrencyBalance
   autoload :Engine
+  autoload :Execution
   autoload :Limit
   autoload :Market
   autoload :Operationable
