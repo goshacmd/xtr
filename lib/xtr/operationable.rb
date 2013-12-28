@@ -38,7 +38,7 @@ module Xtr
       if block
         instance_exec(*args, &block)
       else
-        raise NoSuchOperationError, "No operation named #{op_name} was registered"
+        raise NoSuchOperationError, "No operation named #{query} was registered"
       end
     end
 

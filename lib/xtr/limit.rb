@@ -35,14 +35,17 @@ module Xtr
     def fill(amount)
       amount = Util.big_decimal(amount)
       filled = Util.zero
+      remaining = amount
 
       Xtr.logger.debug "filling limit #{price.to_f} - #{amount.to_f}"
 
-      unless filled == amount
+      while remaining > 0
         order = orders.shift
-        fill = order.remainder_with_cap(amount)
+        break unless order
+        fill = order.remainder_with_cap(remaining)
         order.fill(fill, price)
         filled += fill
+        remaining -= fill
 
         if order.filled?
           filled_orders.push(order)
@@ -51,7 +54,7 @@ module Xtr
         end
       end
 
-      @size -= amount
+      @size -= filled
     end
 
     def inspect

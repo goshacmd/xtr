@@ -34,9 +34,10 @@ module Xtr
       Xtr.logger.debug "matched #{order.uuid} - fills: #{fills.map { |qty, a| [qty.to_f, a.to_f] }}, totalling #{filled.to_f}"
 
       limit = tree.get(price) || Limit.new(price)
-      limit.add(order)
+      limit.add(order) if order.unfilled?
 
       tree.push(price, limit)
+      tree.delete(price) if limit.size.zero?
       tree.cleanup
     end
 
@@ -50,10 +51,10 @@ module Xtr
       tree = tree_for_direction(order.direction)
       limit = tree.get(price)
 
-      limit.remove(order)
+      limit.remove(order) if limit
       order.cancel!
 
-      tree.delete(price) if limit.size.zero?
+      tree.delete(price) if limit && limit.size.zero?
     end
 
     private
@@ -77,11 +78,11 @@ module Xtr
       filled = Util.zero
 
       if opposite.can_fill_price(order.price)
-        while filled < order.price && order.unfilled? && opposite.can_fill_price(order.price)
+        while filled < order.quantity && order.unfilled? && opposite.can_fill_price(order.price)
           price, limit = opposite.best_price, opposite.best_limit
           amount = order.remainder_with_cap(limit.size)
           limit.fill(amount)
-          opposite.cleanup
+          opposite.delete(price) if limit.size.zero?
           filled += amount
           fills << [amount, price]
           order.fill(amount, price)
