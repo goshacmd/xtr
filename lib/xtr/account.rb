@@ -7,18 +7,20 @@ module Xtr
   #   acc.credit(:USD, 100.00)
   #   acc.balance(:USD) # => #<Balance account=123 currency=USD available=100.00 reserved=0.00>
   class Account
-    attr_reader :uuid, :open_orders
+    attr_reader :engine, :uuid, :open_orders
 
     # Public: Initialize an account.
     #
-    # uuid - The UUID string. Default: auto-generate.
-    def initialize(uuid = Util.uuid)
+    # engine - The Engine instance.
+    # uuid   - The UUID string. Default: auto-generate.
+    def initialize(engine, uuid = Util.uuid)
+      @engine = engine
       @uuid = uuid
 
       @open_orders = []
 
       @balances = Hash.new do |hash, key|
-        if CURRENCIES.include?(key)
+        if engine.instrument_registry.key?(key)
           hash[key] = CurrencyBalance.new(self, key)
         else
           raise UnsupportedCurrencyError, "#{key} is not a supported currency"
@@ -78,6 +80,10 @@ module Xtr
     #              passed, all remaining funds will be released.
     def debit_reserved(currency, reserve_id, amount = nil)
       balance(currency).debit_reserved(reserve_id, amount)
+    end
+
+    def to_s
+      "#{uuid} - #{@balances.values.join(', ')}"
     end
 
     def inspect

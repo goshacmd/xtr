@@ -74,8 +74,8 @@ module Xtr
     end
 
     # Public: Get the offered currency symbol.
-    def offered_currency
-      buy? ? market.right_currency : market.left_currency
+    def offered
+      buy? ? market.right.name : market.left.name
     end
 
     # Public: Calculate received amount.
@@ -87,29 +87,29 @@ module Xtr
     end
 
     # Public: Get the received currency symbol.
-    def received_currency
-      sell? ? market.right_currency : market.left_currency
+    def received
+      sell? ? market.right.name : market.left.name
     end
 
     # Public: Reserve the order amount.
     def reserve
-      @reserve_id = account.reserve(offered_currency, offered_amount)
+      @reserve_id = account.reserve(offered, offered_amount)
       account.open_orders << self
     end
 
     # Public: Release the order amount.
     def release(amount = nil)
-      account.release(offered_currency, reserve_id, amount)
+      account.release(offered, reserve_id, amount)
     end
 
     # Public: Debit the reserved order amount.
     def debit(amount = nil)
-      account.debit_reserved(offered_currency, reserve_id, amount)
+      account.debit_reserved(offered, reserve_id, amount)
     end
 
     # Public: Credit received amount in received currency.
     def credit(amount = received_amount)
-      account.credit(received_currency, amount)
+      account.credit(received, amount)
     end
 
     # Public: Release order amount and remove from account's open orders if it

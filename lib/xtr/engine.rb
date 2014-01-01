@@ -4,13 +4,20 @@ module Xtr
   class Engine
     include Operationable
 
-    attr_reader :supermarket, :balance_sheet
+    attr_reader :supermarket, :balance_sheet, :instruments, :instrument_registry
 
     delegate :account, to: :balance_sheet
+    delegate :market, to: :supermarket
 
-    def initialize
-      @supermarket = Supermarket.new
-      @balance_sheet = BalanceSheet.new
+    def initialize(instruments)
+      @supermarket = Supermarket.new(self)
+      @balance_sheet = BalanceSheet.new(self)
+      @instruments = instruments
+      @instrument_registry = Hash[*instruments.values.flatten.map do |instrument|
+        [instrument.name, instrument]
+      end.flatten]
+
+      supermarket.build_markets(instruments)
     end
 
     op :CREATE_ACCOUNT do
@@ -18,39 +25,39 @@ module Xtr
     end
 
     op :DEPOSIT do |account_id, currency, amount|
-      balance_sheet[account_id].credit(currency, amount)
+      account(account_id).credit(currency, amount)
     end
 
     op :WITHDRAW do |account_id, currency, amount|
-      balance_sheet[account_id].debit(currency, amount)
+      account(account_id).debit(currency, amount)
     end
 
-    op :CREATE_LMT do |account_id, direction, left, right, price, quantity|
-      account = balance_sheet[account_id]
-      market = supermarket[left, right]
+    op :CREATE_LMT do |account_id, direction, market_name, price, quantity|
+      account = account(account_id)
+      market = market(market_name)
       order = supermarket.create_order account, market, direction, price, quantity
       order.uuid
     end
 
-    op :BUY do |account_id, left, right, price, quantity|
-      execute(:CREATE_LMT, account_id, :buy, left, right, price, quantity)
+    op :BUY do |account_id, market_name, price, quantity|
+      execute(:CREATE_LMT, account_id, :buy, market_name, price, quantity)
     end
 
-    op :SELL do |account_id, left, right, price, quantity|
-      execute(:CREATE_LMT, account_id, :sell, left, right, price, quantity)
+    op :SELL do |account_id, market_name, price, quantity|
+      execute(:CREATE_LMT, account_id, :sell, market_name, price, quantity)
     end
 
     op :CANCEL do |account_id, order_id|
-      account = balance_sheet[account_id]
+      account = account(account_id)
       order = account.open_orders.find { |o| o.uuid == order_id }
       supermarket.cancel_order order if order
     end
 
     query :BALANCES do |account_id|
-      account = balance_sheet[account_id]
+      account = account(account_id)
 
-      CURRENCIES.map do |currency|
-        balance = account.balance(currency)
+      instrument_registry.values.map do |currency|
+        balance = account.balance(currency.name)
         {
           currency: balance.currency,
           available: balance.available.to_s('F'),
@@ -60,7 +67,7 @@ module Xtr
     end
 
     query :OPEN_ORDERS do |account_id|
-      account = balance_sheet[account_id]
+      account = account(account_id)
 
       account.open_orders.map do |order|
         {
@@ -76,8 +83,8 @@ module Xtr
       end
     end
 
-    query :TICKER do |left, right|
-      market = supermarket[left, right]
+    query :TICKER do |market_name|
+      market = market(market_name)
       last_price = market.last_price
       bid = market.best_bid
       ask = market.best_ask

@@ -14,6 +14,7 @@ module Xtr
   autoload :CurrencyBalance
   autoload :Engine
   autoload :Execution
+  autoload :Instruments
   autoload :Limit
   autoload :Market
   autoload :Operationable
@@ -22,8 +23,6 @@ module Xtr
   autoload :Reservation
   autoload :Supermarket
   autoload :Trees
-
-  CURRENCIES = [:BTC, :USD]
 
   class << self
     attr_writer :logger

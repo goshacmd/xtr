@@ -1,16 +1,17 @@
 module Xtr
   # Public: A balance sheet of all accounts.
   class BalanceSheet
-    attr_reader :accounts
+    attr_reader :engine, :accounts
 
     # Public: Initialize a balance sheet.
-    def initialize
+    def initialize(engine)
+      @engine = engine
       @accounts = {}
     end
 
     # Public: Get an account.
     def account(id = Util.uuid)
-      @accounts[id] ||= Account.new(id)
+      @accounts[id] ||= Account.new(engine, id)
     end
     alias_method :[], :account
 

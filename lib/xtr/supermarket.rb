@@ -1,17 +1,36 @@
 module Xtr
   # Public: A collection of markets.
   class Supermarket
-    attr_reader :markets
+    attr_reader :engine, :markets
 
     # Public: Initialize a supermarket.
-    def initialize
+    def initialize(engine)
+      @engine = engine
       @markets = {}
     end
 
-    # Public: Get a market for the currency pair.
-    def market(base_currency, quoted_currency)
-      pair = [base_currency, quoted_currency].join
-      @markets[pair] ||= Market.new(base_currency, quoted_currency)
+    # Public: Build markets for instruments.
+    #
+    # instruments - The Hash of instruments. Keys are categories (:currency, :stock),
+    #               values are arrays of instruments.
+    def build_markets(instruments)
+      @markets = Hash[*instruments.map do |(category, list)|
+        case category
+        when :currency
+          list.combination(2).map do |left, right|
+            Market.new(:currency, left, right)
+          end
+        when :stock
+          list.product(instruments[:currency]).map do |stock, currency|
+            Market.new(:stock, stock, currency)
+          end
+        end
+      end.flatten.map { |m| [m.pair, m] }.flatten]
+    end
+
+    # Public: Get a market for the instrument pair.
+    def market(name)
+      @markets[name]
     end
     alias_method :[], :market
 
