@@ -7,7 +7,7 @@ module Xtr
     attr_reader :supermarket, :balance_sheet, :instruments, :instrument_registry
 
     delegate :account, to: :balance_sheet
-    delegate :market, to: :supermarket
+    delegate :market, :markets, to: :supermarket
 
     def initialize(instruments)
       @supermarket = Supermarket.new(self)
@@ -79,6 +79,15 @@ module Xtr
           remainder: order.remainder.to_s('F'),
           status: order.status,
           created_at: order.created_at.to_s
+        }
+      end
+    end
+
+    query :MARKETS do
+      markets.values.map do |market|
+        {
+          name: market.pair,
+          type: market.type
         }
       end
     end

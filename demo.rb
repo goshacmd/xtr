@@ -94,6 +94,9 @@ end
 ob m
 b bs
 
+puts "--- #1 balances"
 puts engine.query :BALANCES, a1
-puts engine.query :OPEN_ORDERS, a2
+puts "--- markets"
+puts engine.query :MARKETS
+puts "--- BTC/USD"
 puts engine.query :TICKER, "BTC/USD"
