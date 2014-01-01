@@ -1,4 +1,4 @@
-require 'algorithms'
+require 'rbtree'
 require 'delegate'
 
 module Xtr
@@ -6,7 +6,7 @@ module Xtr
     # Public: A basic tree.
     class Basic < Delegator
       def initialize
-        @tree = Containers::RBTreeMap.new
+        @tree = RBTree.new
         super(@tree)
       end
 
@@ -25,7 +25,7 @@ module Xtr
 
       # Public: Get the limit at the best price.
       def best_limit
-        get(best_price)
+        raise NotImplementedError
       end
 
       # Public: Delete the best limit.
@@ -47,11 +47,15 @@ module Xtr
     # Public: A bids tree.
     class Bids < Basic
       def best_price
-        max_key
+        last && last[0]
+      end
+
+      def best_limit
+        last && last[1]
       end
 
       def delete_best
-        delete_max
+        pop
       end
 
       def can_fill_price(price)
@@ -62,11 +66,15 @@ module Xtr
     # Public: An asks tree.
     class Asks < Basic
       def best_price
-        min_key
+        first && first[0]
+      end
+
+      def best_limit
+        first && first[1]
       end
 
       def delete_best
-        delete_min
+        shift
       end
 
       def can_fill_price(price)

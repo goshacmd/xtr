@@ -31,10 +31,9 @@ module Xtr
 
       fill_order(order)
 
-      limit = tree.get(price) || Limit.new(price, order.direction)
+      limit = tree[price] ||= Limit.new(price, order.direction)
       limit.add(order) if order.unfilled?
 
-      tree.push(price, limit)
       tree.delete(price) if limit.size.zero?
       tree.cleanup
     end
@@ -47,7 +46,7 @@ module Xtr
 
       price = order.price
       tree = tree_for_direction(order.direction)
-      limit = tree.get(price)
+      limit = tree[price]
 
       limit.remove(order) if limit
       order.cancel!

@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
-  spec.add_runtime_dependency 'algorithms', '~> 0.6'
+  spec.add_runtime_dependency 'rbtree', '~> 0.4'
   spec.add_runtime_dependency 'activesupport', '~> 4.0'
 
   spec.add_development_dependency 'bundler', '~> 1.3'
