@@ -3,8 +3,8 @@ require 'xtr'
 Xtr.logger = Logger.new STDOUT
 
 instruments = {
-  currency: [:BTC, :USD].map { |c| Xtr::Instruments::CurrencyInstrument.new(c) },
-  stock: [:AAPL, :GOOG, :V].map { |s| Xtr::Instruments::StockInstrument.new(s) }
+  currency: [:BTC, :USD],
+  stock: [:AAPL, :GOOG, :V]
 }
 
 engine = Xtr::Engine.new instruments

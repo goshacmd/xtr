@@ -3,7 +3,7 @@ require 'xtr'
 #Xtr.logger = Logger.new STDOUT
 
 instruments = {
-  currency: ["BTC", "USD"].map { |c| Xtr::Instruments::CurrencyInstrument.new(c) }
+  currency: [:BTC, :USD]
 }
 
 engine = Xtr::Engine.new instruments

@@ -17,18 +17,20 @@ And then execute:
 
 ## Getting started
 
-First, you would need to instantiate an engine. Engine is essentially a
-container for balance sheet and markets:
+Engine is the core of the trading system. Engine is responsible for executing
+user operations and queries.
+
+First, you would need to instantiate an engine and pass it the list of
+instruments you want it to support. Instruments are broken down by
+category. At the moment, xtr supports currency and stock instruments.
 
 ```ruby
-engine = Xtr::Engine.new
-```
+instruments = {
+  currency: [:BTC, :USD, :EUR, :CNY],
+  stock: [:AAPL, :GOOG, :TWTR, :MSFT, :V, :MA]
+}
 
-The you can get a supermarket and a balance sheet:
-
-```ruby
-supermarket = engine.supermarket
-balances = engine.balance_sheet
+engine = Xtr::Engine.new instruments
 ```
 
 ### Accounts
@@ -36,14 +38,10 @@ balances = engine.balance_sheet
 To create an account, just call:
 
 ```ruby
-account = balances.account
+account = engine.execute :CREATE_ACCOUNT
 ```
 
-Accounds can be retrieved by ID:
-
-```ruby
-account = balances['0877a894-a597-4fdb-b928-4065c374d419']
-```
+It will return account ID.
 
 #### Balance management
 
@@ -51,69 +49,27 @@ Crediting and debiting account balances is easy:
 
 ```ruby
 # Crediting
-account.credit(:USD, 100_000.00)
-account.balance(:USD)
-# => #<Balance account=123 currency=USD available=100_000.00 reserved=0.00>
+engine.execute :DEPOSIT, account, "USD", 100_000.00
+engine.execute :BALANCE, account, "USD"
+# => { currency: USD, available: 100_000.00, reserved: 0.00 }
 
 # Debiting
-account.debit(:USD, 25_000.00)
-account.balance(:USD)
-# => #<Balance account=123 currency=USD available=75_000.00 reserved=0.00>
-```
-
-It's also possible to reserve a specific amount on the balance — and
-then either release or debit it:
-
-```ruby
-# Make sure to save reservation ID
-reservation = account.reserve(:USD, 50_000.00)
-account.balance(:USD)
-# => #<Balance account=123 currency=USD available=25_000.00 reserved=50_000.00>
-
-# Releasing reserved amount
-account.release(:USD, reservation)
-account.balance(:USD)
-# => #<Balance account=123 currency=USD available=75_000.00 reserved=0.00>
-
-reservation = account.reserve(:USD, 50_000.00)
-account.balance(:USD)
-# => #<Balance account=123 currency=USD available=25_000.00 reserved=50_000.00>
-
-# Debiting reserved amount
-account.debit_reserved(:USD, reservation)
-account.balance(:USD)
-# => #<Balance account=123 currency=USD available=25_000.00 reserved=0.00>
-```
-
-### Markets
-
-A market object can be retrieved from the supermarket by passing a pair
-of currency symbols:
-
-```ruby
-market = supermarket[:BTC, :USD]
+engine.execute :WITHDRAW, account, "USD", 25_000.00
+engine.execute :BALANCE, account, "USD"
+# => { currency: USD, available: 75_000.00, reserved: 0.00 }
 ```
 
 ### Creating orders
 
-Orders are created on the supermarket (only LMT orders are supported):
+Only LMT orders are supported currently.
 
 ```ruby
-supermarket.create_order account1, market, :buy, 999.99, 10
-supermarket.create_order account2, market, :sell, 1001.00, 20
+engine.execute :BUY, "BTC/USD", 999.99, 10
+engine.execute :SELL, "EUR:AAPL", 600, 25
 ```
 
 When the orders are matched, balance transfers are performed between the
 accounts.
-
-### Orderbook
-
-Orderbook can be queried for the best bid/ask prices:
-
-```ruby
-market.orderbook.best_bid # => 999.99
-market.orderbook.best_ask # => 1001.00
-```
 
 ## TODO
 

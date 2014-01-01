@@ -12,6 +12,20 @@ module Xtr
     def initialize(instruments)
       @supermarket = Supermarket.new(self)
       @balance_sheet = BalanceSheet.new(self)
+
+      instruments = instruments.map do |category, list|
+        new_list = list.map do |i|
+          case category
+          when :currency
+            Instruments::CurrencyInstrument.new i
+          when :stock
+            Instruments::StockInstrument.new i
+          end
+        end
+
+        [category, new_list]
+      end.to_h
+
       @instruments = instruments
       @instrument_registry = Hash[*instruments.values.flatten.map do |instrument|
         [instrument.name, instrument]
@@ -57,13 +71,19 @@ module Xtr
       account = account(account_id)
 
       instrument_registry.values.map do |currency|
-        balance = account.balance(currency.name)
-        {
-          currency: balance.currency,
-          available: balance.available.to_s('F'),
-          reserved: balance.reserved.to_s('F')
-        }
+        query(:BALANCE, account_id, currency.name)
       end
+    end
+
+    query :BALANCE do |account_id, currency|
+      account = account(account_id)
+      balance = account.balance(currency)
+
+      {
+        currency: currency,
+        available: balance.available.to_s('F'),
+        reserved: balance.reserved.to_s('F')
+      }
     end
 
     query :OPEN_ORDERS do |account_id|
