@@ -3,7 +3,7 @@ module Xtr
   class XtrError < StandardError; end
 
   # Raised when trying to get the balance in unsupported instrument.
-  class UnsupportedInstrumentrror < XtrError; end
+  class UnsupportedInstrumentError < XtrError; end
 
   # Raised when trying to reserve or debit amount larger than the balance.
   class NotEnoughFundsError < XtrError; end

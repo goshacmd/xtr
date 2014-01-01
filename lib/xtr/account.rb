@@ -20,7 +20,7 @@ module Xtr
       @open_orders = []
 
       @balances = Hash.new do |hash, key|
-        if engine.instrument_registry.key?(key)
+        if engine.supported_instrument?(key)
           hash[key] = Balance.new(self, key)
         else
           raise UnsupportedInstrumentError, "#{key} is not a supported instrument"

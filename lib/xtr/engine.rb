@@ -34,6 +34,11 @@ module Xtr
       supermarket.build_markets(instruments)
     end
 
+    # Public: Check whether an instrument is supported.
+    def supported_instrument?(name)
+      instrument_registry.key?(name)
+    end
+
     op :CREATE_ACCOUNT do
       account.uuid
     end
