@@ -71,7 +71,7 @@ module Xtr
     end
 
     def inspect
-      "#<#{self.class.name} price=#{price.to_f} direction-#{direction} order_count=#{orders.count} size=#{size.to_f}>"
+      "#<#{self.class.name} price=#{price.to_f} direction=#{direction} order_count=#{orders.count} size=#{size.to_f}>"
     end
   end
 end
