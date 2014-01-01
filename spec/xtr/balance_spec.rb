@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Xtr::CurrencyBalance do
+describe Xtr::Balance do
   let(:account) { double('account', uuid: '123') }
   let(:currency) { :USD }
 

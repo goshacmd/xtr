@@ -29,6 +29,11 @@ module Xtr
           @type
         end
       end
+
+      # Public: Get instrument name.
+      def name
+        raise NotImplementedError
+      end
     end
 
     class CashInstrument < Instrument

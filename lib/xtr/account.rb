@@ -5,7 +5,7 @@ module Xtr
   #
   #   acc = Account.new
   #   acc.credit(:USD, 100.00)
-  #   acc.balance(:USD) # => #<Balance account=123 currency=USD available=100.00 reserved=0.00>
+  #   acc.balance(:USD) # => #<Balance account=123 instrument=USD available=100.00 reserved=0.00>
   class Account
     attr_reader :engine, :uuid, :open_orders
 
@@ -21,65 +21,65 @@ module Xtr
 
       @balances = Hash.new do |hash, key|
         if engine.instrument_registry.key?(key)
-          hash[key] = CurrencyBalance.new(self, key)
+          hash[key] = Balance.new(self, key)
         else
-          raise UnsupportedCurrencyError, "#{key} is not a supported currency"
+          raise UnsupportedInstrumentError, "#{key} is not a supported instrument"
         end
       end
     end
 
-    # Public: Get an account's balance in specific currency.
+    # Public: Get an account's balance in specific instrument.
     #
-    # currency - The Symbol currency code.
-    def balance(currency)
-      @balances[currency]
+    # instrument - The Symbol instrument code.
+    def balance(instrument)
+      @balances[instrument]
     end
     alias [] balance
 
-    # Public: Credit funds to the `currency` balance.
+    # Public: Credit funds to the `instrument` balance.
     #
-    # currency - The Symbol currency name.
-    # amount   - The BigDecimal amount to credit.
-    def credit(currency, amount)
-      balance(currency).credit(amount)
+    # instrument - The Symbol instrument name.
+    # amount     - The BigDecimal amount to credit.
+    def credit(instrument, amount)
+      balance(instrument).credit(amount)
     end
 
-    # Public: Debit funds from the `currency` balance.
+    # Public: Debit funds from the `instrument` balance.
     #
-    # currency - The Symbol currency name.
-    # amount   - The BigDecimal amount to debit.
-    def debit(currency, amount)
-      balance(currency).debit(amount)
+    # instrument - The Symbol instrument name.
+    # amount     - The BigDecimal amount to debit.
+    def debit(instrument, amount)
+      balance(instrument).debit(amount)
     end
 
-    # Public: Reserve funds from the `currency` balance.
+    # Public: Reserve funds from the `instrument` balance.
     #
-    # currency - The Symbol currency name.
-    # amount   - The BigDecimal amount to reserve.
+    # instrument - The Symbol instrument name.
+    # amount     - The BigDecimal amount to reserve.
     #
     # Returns a String reservation identifier.
-    def reserve(currency, amount)
-      balance(currency).reserve(amount)
+    def reserve(instrument, amount)
+      balance(instrument).reserve(amount)
     end
 
-    # Public: Release funds from the `currency` reserve.
+    # Public: Release funds from the `instrument` reserve.
     #
-    # currency   - The Symbol currency name
+    # instrument - The Symbol instrument name
     # reserve_id - The String reservation identifier.
     # amount     - The optional BigDecimal amount to release. If not
     #              passed, all remaining funds will be released.
-    def release(currency, reserve_id, amount)
-      balance(currency).release(reserve_id, amount)
+    def release(instrument, reserve_id, amount)
+      balance(instrument).release(reserve_id, amount)
     end
 
-    # Public: Debit funds from the `currency` reserved balance.
+    # Public: Debit funds from the `instrument` reserved balance.
     #
-    # currency   - The Symbol currency name.
+    # instrument - The Symbol instrument name.
     # reserve_id - The String reservation identifier.
     # amount     - The optional BigDecimal amount to release. If not
     #              passed, all remaining funds will be released.
-    def debit_reserved(currency, reserve_id, amount = nil)
-      balance(currency).debit_reserved(reserve_id, amount)
+    def debit_reserved(instrument, reserve_id, amount = nil)
+      balance(instrument).debit_reserved(reserve_id, amount)
     end
 
     def to_s

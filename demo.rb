@@ -48,8 +48,8 @@ def b(bs)
 
   buf << "---"
 
-  all_btc = bs.count_all_in_currency("BTC")
-  all_usd = bs.count_all_in_currency("USD")
+  all_btc = bs.count_all_in_instrument("BTC")
+  all_usd = bs.count_all_in_instrument("USD")
 
   buf << "Total BTC: #{all_btc.to_f}, USD: #{all_usd.to_f}"
 

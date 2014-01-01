@@ -1,5 +1,6 @@
 module Xtr
   module Instruments
+    # Public: Currency instrument.
     class CurrencyInstrument < CashInstrument
       quantity :decimal
 

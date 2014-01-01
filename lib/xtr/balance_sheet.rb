@@ -15,10 +15,10 @@ module Xtr
     end
     alias_method :[], :account
 
-    # Public: Count all balances amount in a given currency.
-    def count_all_in_currency(currency)
+    # Public: Count all balances amount in a given instrument.
+    def count_all_in_instrument(instrument)
       accounts.reduce(Util.zero) do |memo, (_, account)|
-        bal = account.balance(currency)
+        bal = account.balance(instrument)
         memo + bal.available + bal.reserved
       end
     end

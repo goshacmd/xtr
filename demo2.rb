@@ -38,8 +38,8 @@ def b(bs)
   buf << ""
   buf << "---"
 
-  all_btc = bs.count_all_in_currency("BTC")
-  all_usd = bs.count_all_in_currency("USD")
+  all_btc = bs.count_all_in_instrument("BTC")
+  all_usd = bs.count_all_in_instrument("USD")
 
   buf << "Total BTC: #{all_btc.to_f}, USD: #{all_usd.to_f}"
 
@@ -63,7 +63,7 @@ b bs
   if [:BUY, :SELL].include? operation
     buy = operation == :BUY
     currency = buy ? "USD" : "BTC"
-    in_currency = Xtr::Util.big_decimal balances.find { |b| b[:currency] == currency }[:available]
+    in_currency = Xtr::Util.big_decimal balances.find { |b| b[:instrument] == currency }[:available]
     to_trade = rand(0..in_currency/3).to_f
     price = rand(700..900).to_f
 

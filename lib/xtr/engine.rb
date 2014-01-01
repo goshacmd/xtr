@@ -38,12 +38,12 @@ module Xtr
       account.uuid
     end
 
-    op :DEPOSIT do |account_id, currency, amount|
-      account(account_id).credit(currency, amount)
+    op :DEPOSIT do |account_id, instrument, amount|
+      account(account_id).credit(instrument, amount)
     end
 
-    op :WITHDRAW do |account_id, currency, amount|
-      account(account_id).debit(currency, amount)
+    op :WITHDRAW do |account_id, instrument, amount|
+      account(account_id).debit(instrument, amount)
     end
 
     op :CREATE_LMT do |account_id, direction, market_name, price, quantity|
@@ -70,17 +70,17 @@ module Xtr
     query :BALANCES do |account_id|
       account = account(account_id)
 
-      instrument_registry.values.map do |currency|
-        query(:BALANCE, account_id, currency.name)
+      instrument_registry.values.map do |instrument|
+        query(:BALANCE, account_id, instrument.name)
       end
     end
 
-    query :BALANCE do |account_id, currency|
+    query :BALANCE do |account_id, instrument|
       account = account(account_id)
-      balance = account.balance(currency)
+      balance = account.balance(instrument)
 
       {
-        currency: currency,
+        instrument: instrument,
         available: balance.available.to_s('F'),
         reserved: balance.reserved.to_s('F')
       }

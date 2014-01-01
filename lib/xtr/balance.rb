@@ -1,25 +1,25 @@
 module Xtr
-  # Public: A currency balance of an account.
+  # Public: An instrument balance of an account.
   #
   # Examples
   #
-  #   cb = CurrencyBalance.new acc, :USD
+  #   cb = Balance.new acc, :USD
   #   cb.credit(10_000.00)
   #   cb.available # => 10_000.00
   #
   #   cb.debit(2_500.00)
   #   cb.available # => 7_500.00
-  class CurrencyBalance
-    attr_reader :account, :currency, :available, :reserved,
+  class Balance
+    attr_reader :account, :instrument, :available, :reserved,
       :reservations, :old_reservations
 
     # Public: Initialize a balance.
     #
     # account  - The account.
-    # currency - The Symbol currency code.
-    def initialize(account, currency)
+    # instrument - The Symbol instrument code.
+    def initialize(account, instrument)
       @account = account
-      @currency = currency
+      @instrument = instrument
       @available = Util.zero
       @reserved = Util.zero
       @reservations = {}
@@ -108,11 +108,11 @@ module Xtr
     end
 
     def inspect
-      "#<#{self.class.name} account=#{account.uuid} currency=#{currency} available=#{available} reserved=#{reserved}>"
+      "#<#{self.class.name} account=#{account.uuid} instrument=#{instrument} available=#{available} reserved=#{reserved}>"
     end
 
     def to_s
-      "(#{currency} - available: #{available.to_f}, reserved: #{reserved.to_f})"
+      "(#{instrument} - available: #{available.to_f}, reserved: #{reserved.to_f})"
     end
 
     private
@@ -130,7 +130,7 @@ module Xtr
 
       return true if bucket >= Util.big_decimal(amount)
       raise NotEnoughFundsError,
-        "Not enough funds on #{currency} balance (#{type}: #{bucket}, needed: #{amount})"
+        "Not enough funds on #{instrument} balance (#{type}: #{bucket}, needed: #{amount})"
     end
 
     # Private: Ensure a specific reservation exists.

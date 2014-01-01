@@ -1,5 +1,6 @@
 module Xtr
   module Instruments
+    # Public: Stock instrument.
     class StockInstrument < CashInstrument
       quantity :integer
 

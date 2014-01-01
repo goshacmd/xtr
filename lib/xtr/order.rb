@@ -73,7 +73,7 @@ module Xtr
       buy? ? price * quantity : quantity
     end
 
-    # Public: Get the offered currency symbol.
+    # Public: Get the offered instrument symbol.
     def offered
       buy? ? market.right.name : market.left.name
     end
@@ -86,7 +86,7 @@ module Xtr
       sell? ? price * quantity : quantity
     end
 
-    # Public: Get the received currency symbol.
+    # Public: Get the received instrument symbol.
     def received
       sell? ? market.right.name : market.left.name
     end
@@ -107,7 +107,7 @@ module Xtr
       account.debit_reserved(offered, reserve_id, amount)
     end
 
-    # Public: Credit received amount in received currency.
+    # Public: Credit received amount in received instrument.
     def credit(amount = received_amount)
       account.credit(received, amount)
     end

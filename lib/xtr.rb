@@ -10,8 +10,8 @@ module Xtr
   extend ActiveSupport::Autoload
 
   autoload :Account
+  autoload :Balance
   autoload :BalanceSheet
-  autoload :CurrencyBalance
   autoload :Engine
   autoload :Execution
   autoload :Instruments
