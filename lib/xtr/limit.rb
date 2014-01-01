@@ -35,7 +35,25 @@ module Xtr
     #
     # order - The Order object.
     def remove(order)
-      @size -= order.remainder if @orders.delete(order)
+      @size -= order.remainder if orders.delete(order)
+    end
+
+    # Public: Get array of orders that can fill `amount`.
+    #
+    # Returns an array of [order, fill] pairs.
+    def orders_to_fill(amount)
+      remaining = amount
+      fills = []
+
+      final_orders = orders.take_while do |order|
+        if remaining > 0
+          fill = order.remainder_with_cap(remaining)
+          fills << fill
+          remaining -= fill
+        end
+      end
+
+      final_orders.zip(fills)
     end
 
     # Public: Fill `amount`.
@@ -44,30 +62,17 @@ module Xtr
     # other_order - The Order object.
     def fill(amount, other_order)
       amount = Util.big_decimal(amount)
-      filled = Util.zero
-      remaining = amount
 
       Xtr.logger.debug "filling limit #{price.to_f} - #{amount.to_f}"
 
-      while remaining > 0
-        order = orders.shift
-        break unless order
-        fill = order.remainder_with_cap(remaining)
-
+      orders_to_fill(amount).each do |order, fill|
         execution = Execution.new(order, other_order, fill)
         execution.execute
 
-        filled += fill
-        remaining -= fill
-
-        if order.filled?
-          filled_orders.push(order)
-        else
-          orders.unshift(order)
-        end
+        orders.shift if order.filled?
       end
 
-      @size -= filled
+      @size -= amount
     end
 
     def inspect
