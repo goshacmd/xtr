@@ -13,22 +13,28 @@ module Xtr
       @uuid = uuid
     end
 
-    # Public: Exectute.
-    def execute
-      bid = buy_order.price
-      ask = sell_order.price
+    # Public: Compute execution price.
+    def computed_price
+      # Use the price of the order that was submitted earlier than the other.
+      [buy_order, sell_order].sort_by(&:created_at).first.price
+    end
 
-      # If buy and sell order prices differ, use the price of the order
-      # that was submitted earlier than the other.
-      price = bid == ask ? bid : [buy_order, sell_order].sort_by(&:created_at).first.price
-
-      left_amount = amount
-      right_amount = price * amount
-
+    # Public: Transfer amounts between buyer/seller accounts.
+    def transfer(left_amount, right_amount)
       buy_order.debit(right_amount)
       sell_order.credit(right_amount)
       sell_order.debit(left_amount)
       buy_order.credit(left_amount)
+    end
+
+    # Public: Exectute.
+    def execute
+      price = computed_price
+
+      left_amount = amount
+      right_amount = price * amount
+
+      transfer(left_amount, right_amount)
 
       [buy_order, sell_order].each { |o| o.add_fill(amount, price) }
 
