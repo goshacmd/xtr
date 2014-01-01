@@ -83,7 +83,8 @@ module Xtr
     end
 
     def to_s
-      "#{uuid} - #{@balances.values.join(', ')}"
+      balances = @balances.values.sort_by(&:instrument)
+      "#{uuid} - #{balances.join(', ')}"
     end
 
     def inspect
