@@ -33,8 +33,12 @@ module Xtr
         raise NotImplementedError
       end
 
+      def take_best_while
+        raise NotImplementedError
+      end
+
       # Public: Check if an order with price `price` can be filled from the tree.
-      def can_fill_price(price)
+      def can_fill_price?(price)
         raise NotImplementedError
       end
 
@@ -58,8 +62,12 @@ module Xtr
         pop
       end
 
-      def can_fill_price(price)
-        price && best_price && best_price >= price
+      def take_best_while(&block)
+        reverse_each.take_while(&block)
+      end
+
+      def can_fill_price?(price)
+        !!lower_bound(price)
       end
     end
 
@@ -77,8 +85,12 @@ module Xtr
         shift
       end
 
-      def can_fill_price(price)
-        price && best_price && best_price <= price
+      def take_best_while(&block)
+        take_while(&block)
+      end
+
+      def can_fill_price?(price)
+        !!upper_bound(price)
       end
     end
   end

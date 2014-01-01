@@ -31,6 +31,10 @@ module Xtr
       end
     end
 
+    def to_s
+      pair
+    end
+
     def inspect
       "#<#{self.class.name} #{pair}>"
     end

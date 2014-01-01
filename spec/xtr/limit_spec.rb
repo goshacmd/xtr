@@ -35,7 +35,7 @@ describe Xtr::Limit do
     let(:order3) { double('order3', remainder: 500) }
 
     before do
-      [order1, order2, order3].each { |order| limit.add(order) }
+      limit.stub(orders: [order1, order2, order3])
     end
 
     it 'returns order-fill pairs' do

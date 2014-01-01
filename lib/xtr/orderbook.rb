@@ -54,37 +54,45 @@ module Xtr
       tree.delete(price) if limit && limit.size.zero?
     end
 
-    private
-
-    # Private: Get the tree for order direction.
+    # Public: Get the tree for order direction.
     def tree_for_direction(direction)
       direction == :buy ? @bids : @asks
     end
 
-    # Private: Get the tree opposite of order direction.
+    # Public: Get the tree opposite of order direction.
     def tree_opposite_direction(direction)
       direction == :buy ? @asks : @bids
     end
 
-    # Private: Get the best offer from the opposite tree.
+    # Public: Get array of limits that can fill `amount`.
+    def limits_to_fill(tree, amount)
+      remaining = amount
+      fills = []
+
+      final_limits = tree.take_best_while do |price, limit|
+        if remaining > 0
+          fill = remaining.cap(limit.size)
+          fills << fill
+          remaining -= fill
+        end
+      end
+
+      final_limits.map(&:last).zip(fills)
+    end
+
+    # Public: Get the best offer from the opposite tree.
     #
     # order - The Order object.
     def fill_order(order)
       opposite = tree_opposite_direction(order.direction)
-      filled = Util.zero
 
-      if opposite.can_fill_price(order.price)
-        while filled < order.quantity && order.unfilled? && opposite.can_fill_price(order.price)
-          price, limit = opposite.best_price, opposite.best_limit
-          amount = order.remainder_with_cap(limit.size)
-          limit.fill(amount, order)
-          opposite.delete(price) if limit.size.zero?
-          filled += amount
-          @last_price = price
+      if opposite.can_fill_price?(order.price)
+        limits_to_fill(opposite, order.remainder).each do |limit, fill|
+          limit.fill(fill, order)
+          opposite.delete(limit.price) if limit.size.zero?
+          @last_price = limit.price
         end
       end
-
-      filled
     end
   end
 end
