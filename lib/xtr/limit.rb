@@ -47,7 +47,7 @@ module Xtr
 
       final_orders = orders.take_while do |order|
         if remaining > 0
-          fill = order.remainder_with_cap(remaining)
+          fill = order.remainder.cap(remaining)
           fills << fill
           remaining -= fill
         end

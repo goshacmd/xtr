@@ -2,6 +2,8 @@ require 'logger'
 require 'active_support/dependencies/autoload'
 require 'active_support/core_ext/module/delegation'
 
+require 'xtr/core_ext/numeric'
+
 require 'xtr/version'
 require 'xtr/util'
 require 'xtr/errors'

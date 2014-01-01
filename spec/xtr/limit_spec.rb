@@ -30,9 +30,9 @@ describe Xtr::Limit do
   end
 
   describe '#orders_to_fill' do
-    let(:order1) { double('order1', remainder: 100, remainder_with_cap: 100) }
-    let(:order2) { double('order2', remainder: 150, remainder_with_cap: 150) }
-    let(:order3) { double('order3', remainder: 500, remainder_with_cap: 50) }
+    let(:order1) { double('order1', remainder: 100) }
+    let(:order2) { double('order2', remainder: 150) }
+    let(:order3) { double('order3', remainder: 500) }
 
     before do
       [order1, order2, order3].each { |order| limit.add(order) }

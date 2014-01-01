@@ -151,11 +151,6 @@ module Xtr
       false
     end
 
-    # Public: Get the amount to be filled, limited by cap.
-    def remainder_with_cap(cap)
-      remainder >= cap ? cap : remainder
-    end
-
     # Public: Get order type.
     def type
       :LMT
