@@ -50,8 +50,8 @@ module Xtr
     query :BALANCES do |account_id|
       account = account(account_id)
 
-      instrument_registry.instruments.map do |instrument|
-        query(:BALANCE, account_id, instrument.name)
+      instrument_registry.names.map do |instrument_name|
+        query(:BALANCE, account_id, instrument_name)
       end
     end
 

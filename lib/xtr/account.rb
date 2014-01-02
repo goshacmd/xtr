@@ -4,10 +4,10 @@ module Xtr
   # Examples
   #
   #   acc = Account.new
-  #   acc.credit(:USD, 100.00)
+  #   acc.credit(engine, :USD, 100.00)
   #   acc.balance(:USD) # => #<Balance account=123 instrument=USD available=100.00 reserved=0.00>
   class Account
-    attr_reader :engine, :uuid, :open_orders
+    attr_reader :engine, :open_orders, :uuid
 
     # Public: Initialize an account.
     #
@@ -40,7 +40,7 @@ module Xtr
     # Public: Credit funds to the `instrument` balance.
     #
     # instrument - The Symbol instrument name.
-    # amount     - The BigDecimal amount to credit.
+    # amount     - The amount to credit.
     def credit(instrument, amount)
       balance(instrument).credit(amount)
     end
@@ -48,7 +48,7 @@ module Xtr
     # Public: Debit funds from the `instrument` balance.
     #
     # instrument - The Symbol instrument name.
-    # amount     - The BigDecimal amount to debit.
+    # amount     - The amount to debit.
     def debit(instrument, amount)
       balance(instrument).debit(amount)
     end
@@ -56,7 +56,7 @@ module Xtr
     # Public: Reserve funds from the `instrument` balance.
     #
     # instrument - The Symbol instrument name.
-    # amount     - The BigDecimal amount to reserve.
+    # amount     - The amount to reserve.
     #
     # Returns a String reservation identifier.
     def reserve(instrument, amount)
@@ -67,7 +67,7 @@ module Xtr
     #
     # instrument - The Symbol instrument name
     # reserve_id - The String reservation identifier.
-    # amount     - The optional BigDecimal amount to release. If not
+    # amount     - The optional amount to release. If not
     #              passed, all remaining funds will be released.
     def release(instrument, reserve_id, amount)
       balance(instrument).release(reserve_id, amount)
@@ -77,7 +77,7 @@ module Xtr
     #
     # instrument - The Symbol instrument name.
     # reserve_id - The String reservation identifier.
-    # amount     - The optional BigDecimal amount to release. If not
+    # amount     - The optional amount to release. If not
     #              passed, all remaining funds will be released.
     def debit_reserved(instrument, reserve_id, amount = nil)
       balance(instrument).debit_reserved(reserve_id, amount)

@@ -22,5 +22,12 @@ module Xtr
         memo + bal.available + bal.reserved
       end
     end
+
+    # Public: Count all balances in all instruments.
+    def count_all
+      engine.instrument_registry.names.map do |instrument_name|
+        [instrument_name, count_all_in_instrument(instrument_name)]
+      end.to_h
+    end
   end
 end

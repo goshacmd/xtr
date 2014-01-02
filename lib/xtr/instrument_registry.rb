@@ -48,6 +48,11 @@ module Xtr
       end.flatten]
     end
 
+    # Public: Get an array of instrument names.
+    def names
+      name_instrument.keys
+    end
+
     # Public: Get an array of instrument instances.
     def instruments
       name_instrument.values

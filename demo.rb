@@ -48,10 +48,8 @@ def b(bs)
 
   buf << "---"
 
-  all_btc = bs.count_all_in_instrument("BTC")
-  all_usd = bs.count_all_in_instrument("USD")
-
-  buf << "Total BTC: #{all_btc.to_f}, USD: #{all_usd.to_f}"
+  all = bs.count_all.map { |k, v| "#{k}: #{v.to_f}" }
+  buf << "Total: #{all.join(', ')}"
 
   buf << "---\n"
 
@@ -61,26 +59,21 @@ end
 ob m
 b bs
 
-ob1 = engine.execute :BUY, a1, "BTC/USD", 575, 20
-ob2 = engine.execute :BUY, a1, "BTC/USD", 579, 30
+engine.execute :BUY, a1, "BTC/USD", 575, 20
+engine.execute :BUY, a1, "BTC/USD", 579, 30
 
-os1 = engine.execute :SELL, a2, "BTC/USD", 581, 35
-os2 = engine.execute :SELL, a2, "BTC/USD", 585, 40
+engine.execute :SELL, a2, "BTC/USD", 581, 35
+engine.execute :SELL, a2, "BTC/USD", 585, 40
 
 engine.execute :SELL, a1, "USD:AAPL", 710, 10
 
 ob m
 b bs
 
-os3 = engine.execute :SELL, a2, "BTC/USD", 575, 10
-os4 = engine.execute :SELL, a2, "BTC/USD", 575, 25
+engine.execute :SELL, a2, "BTC/USD", 575, 10
+engine.execute :SELL, a2, "BTC/USD", 575, 25
 
 engine.execute :BUY, a2, "USD:AAPL", 750, 10
-
-ob m
-b bs
-
-engine.execute :CANCEL, a2, os2
 
 ob m
 b bs
