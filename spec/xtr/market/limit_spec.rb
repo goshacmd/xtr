@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Xtr::Limit do
+describe Xtr::Market::Limit do
   subject(:limit) { described_class.new(100, :buy) }
 
   describe '#add' do
@@ -58,8 +58,8 @@ describe Xtr::Limit do
     before do
       limit.stub(orders_to_fill: [[order1, 100], [order2, 150]])
 
-      Xtr::Execution.stub(:new).with(order1, f_order, 100).and_return(execution1)
-      Xtr::Execution.stub(:new).with(order2, f_order, 150).and_return(execution2)
+      Xtr::Market::Execution.stub(:new).with(order1, f_order, 100).and_return(execution1)
+      Xtr::Market::Execution.stub(:new).with(order2, f_order, 150).and_return(execution2)
 
       [order1, order2].each { |order| limit.add(order) }
     end

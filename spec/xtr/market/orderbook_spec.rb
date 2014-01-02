@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Xtr::Orderbook do
+describe Xtr::Market::Orderbook do
   subject(:orderbook) { described_class.new }
 
   describe '#fill_order' do

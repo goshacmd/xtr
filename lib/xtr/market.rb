@@ -6,6 +6,14 @@ module Xtr
   #   btcusd = Market.new :currency, BTC, USD
   #   aapl = Market.new :stock, AAPL, USD
   class Market
+    extend ActiveSupport::Autoload
+
+    autoload :Execution
+    autoload :Limit
+    autoload :Order
+    autoload :Orderbook
+    autoload :Trees
+
     attr_reader :type, :left, :right, :orderbook
 
     delegate :bids, :asks, :best_bid, :best_ask, :last_price,

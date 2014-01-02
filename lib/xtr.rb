@@ -16,18 +16,13 @@ module Xtr
   autoload :BalanceCollection
   autoload :BalanceSheet
   autoload :Engine
-  autoload :Execution
   autoload :InstrumentRegistry
   autoload :Instruments
-  autoload :Limit
   autoload :Market
   autoload :OperationInterface
   autoload :Operationable
-  autoload :Order
-  autoload :Orderbook
   autoload :Reservation
   autoload :Supermarket
-  autoload :Trees
 
   class << self
     attr_writer :logger

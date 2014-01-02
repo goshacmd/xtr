@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Xtr::Execution do
+describe Xtr::Market::Execution do
   let(:amount) { 10 }
   let(:buy_order) { double('buy_order', buy?: true) }
   let(:sell_order) { double('sell_order', buy?: false) }

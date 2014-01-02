@@ -41,7 +41,7 @@ module Xtr
 
     # Public: Create and route an order.
     def create_order(*args)
-      order = Order.new(*args)
+      order = Market::Order.new(*args)
       route_order(order)
       order
     end

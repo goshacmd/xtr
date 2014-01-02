@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Xtr::Order do
+describe Xtr::Market::Order do
   let(:account) { double('account', uuid: '123').as_null_object }
   let(:market) { double('market').as_null_object }
 
