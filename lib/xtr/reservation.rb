@@ -3,17 +3,19 @@ module Xtr
   class Reservation
     attr_reader :balance, :amount, :uuid, :released, :debited
 
+    delegate :convert_quantity, to: :balance
+
     # Public: Initialize a reservation.
     #
     # balance - The Balance object.
-    # amount  - The BigDecimal reservation amount.
+    # amount  - The reservation amount.
     # uuid    - The optional reservation identifier.
     def initialize(balance, amount, uuid = Util.uuid)
       @balance = balance
-      @amount = Util.big_decimal(amount)
+      @amount = convert_quantity(amount)
+      @released = convert_quantity(0)
+      @debited = convert_quantity(0)
       @uuid = uuid
-      @released = Util.zero
-      @debited = Util.zero
     end
 
     # Public: Get a reservation remainder.
@@ -28,17 +30,17 @@ module Xtr
 
     # Public: Release an amount from the reservation.
     #
-    # amount - The optional BigDecimal amount. Default: remainder.
+    # amount - The optional amount. Default: remainder.
     def release(amount = remainder)
-      amount = Util.big_decimal(amount)
+      amount = convert_quantity(amount)
       @released += amount if ensure_can_use(amount)
     end
 
     # Public: Release an amount from the reservation.
     #
-    # amount - The optional BigDecimal amount. Default: remainder.
+    # amount - The optional amount. Default: remainder.
     def debit(amount = remainder)
-      amount = Util.big_decimal(amount)
+      amount = convert_quantity(amount)
       @debited += amount if ensure_can_use(amount)
     end
 
@@ -51,7 +53,7 @@ module Xtr
     # Private: Ensure a specific amount can be released/debited from the
     # reservation.
     #
-    # amount - The BigDecimal amount.
+    # amount - The amount.
     #
     # Returns true if the needed amount is available.
     # Raises NotEnoughFundsReservedError otherwise.

@@ -28,7 +28,21 @@ module Xtr
           @type = type if type
           @type
         end
+
+        # Public: Convert a number to quantity of instrument type.
+        def convert_quantity(number)
+          case quantity
+          when :decimal
+            Util.big_decimal(number)
+          when :integer
+            number.to_i
+          else
+            raise XtrError, "No quantity type for instrument '#{type}' defined"
+          end
+        end
       end
+
+      delegate :convert_quantity, to: :class
 
       # Public: Get instrument name.
       def name

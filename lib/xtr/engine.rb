@@ -86,8 +86,8 @@ module Xtr
 
       {
         instrument: instrument,
-        available: balance.available.to_s('F'),
-        reserved: balance.reserved.to_s('F')
+        available: balance.available.to_s,
+        reserved: balance.reserved.to_s
       }
     end
 
@@ -99,9 +99,9 @@ module Xtr
           id: order.uuid,
           market: order.market.pair,
           direction: order.direction,
-          price: order.price.to_s('F'),
-          quantity: order.quantity.to_s('F'),
-          remainder: order.remainder.to_s('F'),
+          price: order.price.to_s,
+          quantity: order.quantity.to_s,
+          remainder: order.remainder.to_s,
           status: order.status,
           created_at: order.created_at.to_s
         }
@@ -124,9 +124,9 @@ module Xtr
       ask = market.best_ask
 
       {
-        bid: bid ? bid.to_s('F') : '',
-        ask: ask ? ask.to_s('F') : '',
-        last_price: last_price ? last_price.to_s('F') : ''
+        bid: bid.to_s,
+        ask: ask.to_s,
+        last_price: last_price.to_s
       }
     end
   end

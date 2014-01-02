@@ -3,7 +3,7 @@ module Xtr
   #
   # Examples
   #
-  #   cb = Balance.new acc, :USD
+  #   cb = Balance.new acc, USD
   #   cb.credit(10_000.00)
   #   cb.available # => 10_000.00
   #
@@ -13,47 +13,49 @@ module Xtr
     attr_reader :account, :instrument, :available, :reserved,
       :reservations, :old_reservations
 
+    delegate :convert_quantity, to: :instrument
+
     # Public: Initialize a balance.
     #
-    # account  - The account.
-    # instrument - The Symbol instrument code.
+    # account    - The account.
+    # instrument - The Instrument instance.
     def initialize(account, instrument)
       @account = account
       @instrument = instrument
-      @available = Util.zero
-      @reserved = Util.zero
+      @available = convert_quantity(0)
+      @reserved = convert_quantity(0)
       @reservations = {}
       @old_reservations = {}
     end
 
     # Public: Credit funds to the balance.
     #
-    # amount - The BigDecimal amount to credit.
+    # amount - The amount to credit.
     def credit(amount)
-      amount = Util.big_decimal(amount)
+      amount = convert_quantity(amount)
 
       @available += amount if ensure_positive(amount)
     end
 
     # Public: Debit funds from the balance.
     #
-    # amount - The BigDecimal amount to debit.
+    # amount - The amount to debit.
     #
     # Raises NotEnoughFundsError if there are not enough funds.
     def debit(amount)
-      amount = Util.big_decimal(amount)
+      amount = convert_quantity(amount)
 
       @available -= amount if ensure_positive(amount) && ensure_at_least(amount)
     end
 
     # Public: Reserve a specific amount from the available amount.
     #
-    # amount - The BigDecimal amount to reserve.
+    # amount - The amount to reserve.
     #
     # Returns a String reservation identifier.
     # Raises NotEnoughFundsError if there are not enough funds.
     def reserve(amount)
-      amount = Util.big_decimal(amount)
+      amount = convert_quantity(amount)
 
       if ensure_positive(amount) && ensure_at_least(amount)
         reservation = Reservation.new(self, amount)
@@ -70,7 +72,7 @@ module Xtr
     # balance.
     #
     # reserve_id - The String reservation identifier.
-    # amount     - The optional BigDecimal amount to release. If not
+    # amount     - The optional amount to release. If not
     #              passed, all remaining funds will be released.
     #
     # Raises NoSuchReservationError if no reservation with this identifier
@@ -90,7 +92,7 @@ module Xtr
     # Public: Debit from reserve balance.
     #
     # reserve_id - The String reservation identifier.
-    # amount     - The optional BigDecimal amount to debit. If not
+    # amount     - The optional amount to debit. If not
     #              passed, all remaining funds will be debited.
     #
     # Raises NoSuchReservationError if no reservation with this identifier
@@ -108,18 +110,22 @@ module Xtr
     end
 
     def inspect
-      "#<#{self.class.name} account=#{account.uuid} instrument=#{instrument} available=#{available} reserved=#{reserved}>"
+      "#<#{self.class.name} account=#{account.uuid} instrument=#{instrument.name} available=#{available} reserved=#{reserved}>"
     end
 
     def to_s
-      "(#{instrument} - available: #{available.to_f}, reserved: #{reserved.to_f})"
+      if instrument.class.quantity == :decimal
+        "(#{instrument.name} - available: #{available.to_s('F')}, reserved: #{reserved.to_s('F')})"
+      else
+        "(#{instrument.name} - available: #{available}, reserved: #{reserved})"
+      end
     end
 
     private
 
     # Private: Ensure there is at least `amount` available.
     #
-    # amount - The BigDecimal amount to check against.
+    # amount - The amount to check against.
     # type   - The bucket to check against (default :available).
     #          Possible values: :available, :reserve.
     #
@@ -128,7 +134,7 @@ module Xtr
     def ensure_at_least(amount, type = :available)
       bucket = type == :available ? available : reserved
 
-      return true if bucket >= Util.big_decimal(amount)
+      return true if bucket >= convert_quantity(amount)
       raise NotEnoughFundsError,
         "Not enough funds on #{instrument} balance (#{type}: #{bucket}, needed: #{amount})"
     end
@@ -153,7 +159,7 @@ module Xtr
     # Returns true if it is.
     # Raises NegativeAmountError otherwise.
     def ensure_positive(amount)
-      return true if amount >= Util.zero
+      return true if amount >= 0
       raise NegativeAmountError,
         "Positive amount expected, but amount passed (#{amount.to_f}) was negative."
     end

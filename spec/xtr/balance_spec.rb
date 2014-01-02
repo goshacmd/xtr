@@ -2,9 +2,13 @@ require 'spec_helper'
 
 describe Xtr::Balance do
   let(:account) { double('account', uuid: '123') }
-  let(:currency) { :USD }
+  let(:instrument) { double('instrument') }
 
-  subject(:balance) { described_class.new(account, currency) }
+  before do
+    instrument.stub(:convert_quantity) { |q| q.to_i }
+  end
+
+  subject(:balance) { described_class.new(account, instrument) }
 
   describe '#credit' do
     context 'with a positive amount' do

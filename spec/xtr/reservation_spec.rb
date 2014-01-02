@@ -4,6 +4,10 @@ describe Xtr::Reservation do
   let(:balance) { double('balance', uuid: '123') }
   let(:amount) { TENK }
 
+  before do
+    balance.stub(:convert_quantity) { |q| q.to_i }
+  end
+
   subject(:reservation) { described_class.new(balance, amount) }
 
   describe '#remainder' do

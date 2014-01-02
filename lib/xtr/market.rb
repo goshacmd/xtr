@@ -3,8 +3,8 @@ module Xtr
   #
   # Examples
   #
-  #   btcusd = Market.new :currency, :BTC, :USD
-  #   aapl = Market.new :stock, :AAPL, :USD
+  #   btcusd = Market.new :currency, BTC, USD
+  #   aapl = Market.new :stock, AAPL, USD
   class Market
     attr_reader :type, :left, :right, :orderbook
 

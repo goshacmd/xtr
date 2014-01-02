@@ -21,7 +21,8 @@ module Xtr
 
       @balances = Hash.new do |hash, key|
         if engine.supported_instrument?(key)
-          hash[key] = Balance.new(self, key)
+          instrument = engine.instrument_registry[key]
+          hash[key] = Balance.new(self, instrument)
         else
           raise UnsupportedInstrumentError, "#{key} is not a supported instrument"
         end
@@ -83,7 +84,7 @@ module Xtr
     end
 
     def to_s
-      balances = @balances.values.sort_by(&:instrument)
+      balances = @balances.values.sort_by { |b| b.instrument.name }
       "#{uuid} - #{balances.join(', ')}"
     end
 
