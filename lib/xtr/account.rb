@@ -15,18 +15,10 @@ module Xtr
     # uuid   - The UUID string. Default: auto-generate.
     def initialize(engine, uuid = Util.uuid)
       @engine = engine
-      @uuid = uuid
-
       @open_orders = []
+      @balances = BalanceCollection.new(self)
 
-      @balances = Hash.new do |hash, key|
-        if engine.supported_instrument?(key)
-          instrument = engine.instrument_registry[key]
-          hash[key] = Balance.new(self, instrument)
-        else
-          raise UnsupportedInstrumentError, "#{key} is not a supported instrument"
-        end
-      end
+      @uuid = uuid
     end
 
     # Public: Get an account's balance in specific instrument.
@@ -46,8 +38,7 @@ module Xtr
       to: 'balance(args.shift)'
 
     def to_s
-      balances = @balances.values.sort_by { |b| b.instrument.name }
-      "#{uuid} - #{balances.join(', ')}"
+      "#{uuid} - #{@balances.to_a.join(', ')}"
     end
 
     def inspect

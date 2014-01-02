@@ -13,6 +13,7 @@ module Xtr
 
   autoload :Account
   autoload :Balance
+  autoload :BalanceCollection
   autoload :BalanceSheet
   autoload :Engine
   autoload :Execution
