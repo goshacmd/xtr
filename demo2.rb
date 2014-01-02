@@ -2,11 +2,8 @@ require 'xtr'
 
 #Xtr.logger = Logger.new STDOUT
 
-instruments = {
+engine = Xtr::Engine.new \
   currency: [:BTC, :USD]
-}
-
-engine = Xtr::Engine.new instruments
 
 m = engine.market("BTC/USD")
 bs = engine.balance_sheet
@@ -25,9 +22,9 @@ def ob(m)
   buf << ""
   buf << "Orderbook:"
   buf << "---"
-  o.asks.to_a.reverse.each { |_, a| buf << "#{a.price.to_f} x #{a.size.to_f}" }
+  o.asks.reverse_each { |_, a| buf << a }
   buf << "---"
-  o.bids.to_a.reverse.each { |_, a| buf << "#{a.price.to_f} x #{a.size.to_f}" }
+  o.bids.reverse_each { |_, a| buf << a }
   buf << "---\n"
 
   puts buf.join "\n"
@@ -38,10 +35,8 @@ def b(bs)
   buf << ""
   buf << "---"
 
-  all_btc = bs.count_all_in_instrument("BTC")
-  all_usd = bs.count_all_in_instrument("USD")
-
-  buf << "Total BTC: #{all_btc.to_f}, USD: #{all_usd.to_f}"
+  all = bs.count_all.map { |k, v| "#{k}: #{v.to_f}" }
+  buf << "Total: #{all.join(', ')}"
 
   buf << "---\n"
 

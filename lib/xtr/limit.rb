@@ -75,6 +75,10 @@ module Xtr
       @size -= amount
     end
 
+    def to_s
+      "#{price.to_f} x #{size.to_f}"
+    end
+
     def inspect
       "#<#{self.class.name} price=#{price.to_f} direction=#{direction} order_count=#{orders.count} size=#{size.to_f}>"
     end

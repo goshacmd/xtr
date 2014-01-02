@@ -2,12 +2,9 @@ require 'xtr'
 
 Xtr.logger = Logger.new STDOUT
 
-instruments = {
+engine = Xtr::Engine.new \
   currency: [:BTC, :USD],
   stock: [:AAPL, :GOOG, :V]
-}
-
-engine = Xtr::Engine.new instruments
 
 m = engine.market("BTC/USD")
 bs = engine.balance_sheet
@@ -28,9 +25,9 @@ def ob(m)
   buf << ""
   buf << "Orderbook:"
   buf << "---"
-  o.asks.to_a.reverse.each { |_, a| buf << "#{a.price.to_f} x #{a.size.to_f}" }
+  o.asks.reverse_each { |_, a| buf << a }
   buf << "---"
-  o.bids.to_a.reverse.each { |_, a| buf << "#{a.price.to_f} x #{a.size.to_f}" }
+  o.bids.reverse_each { |_, a| buf << a }
   buf << "---\n"
 
   puts buf.join "\n"
