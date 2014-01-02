@@ -16,6 +16,7 @@ module Xtr
   autoload :BalanceSheet
   autoload :Engine
   autoload :Execution
+  autoload :InstrumentRegistry
   autoload :Instruments
   autoload :Limit
   autoload :Market

@@ -12,31 +12,14 @@ module Xtr
     def initialize(instruments)
       @supermarket = Supermarket.new(self)
       @balance_sheet = BalanceSheet.new(self)
+      @instrument_registry = InstrumentRegistry.new(instruments)
 
-      instruments = instruments.map do |category, list|
-        new_list = list.map do |i|
-          case category
-          when :currency
-            Instruments::CurrencyInstrument.new i
-          when :stock
-            Instruments::StockInstrument.new i
-          end
-        end
-
-        [category, new_list]
-      end.to_h
-
-      @instruments = instruments
-      @instrument_registry = Hash[*instruments.values.flatten.map do |instrument|
-        [instrument.name, instrument]
-      end.flatten]
-
-      supermarket.build_markets(instruments)
+      supermarket.build_markets(instrument_registry.list)
     end
 
     # Public: Check whether an instrument is supported.
     def supported_instrument?(name)
-      instrument_registry.key?(name)
+      instrument_registry.supported?(name)
     end
 
     op :CREATE_ACCOUNT do
@@ -75,7 +58,7 @@ module Xtr
     query :BALANCES do |account_id|
       account = account(account_id)
 
-      instrument_registry.values.map do |instrument|
+      instrument_registry.instruments.map do |instrument|
         query(:BALANCE, account_id, instrument.name)
       end
     end
