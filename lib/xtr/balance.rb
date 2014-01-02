@@ -25,7 +25,6 @@ module Xtr
       @available = convert_quantity(0)
       @reserved = convert_quantity(0)
       @reservations = {}
-      @old_reservations = {}
     end
 
     # Public: Credit funds to the balance.
@@ -80,7 +79,6 @@ module Xtr
     def release(reserve_id, amount = nil)
       if ensure_reservation(reserve_id)
         reservation = reservations[reserve_id]
-        return unless reservation # old reservation
         amount ||= reservation.remainder
         reservation.release(amount)
         @reserved -= amount
@@ -100,11 +98,9 @@ module Xtr
     def debit_reserved(reserve_id, amount = nil)
       if ensure_reservation(reserve_id)
         reservation = reservations[reserve_id]
-        return unless reservation
         amount ||= reservation.remainder
         reservation.debit(amount)
         @reserved -= amount
-        @reservations.delete(reserve_id) if reservation.zero?
         delete_reservation(reservation)
       end
     end
@@ -146,10 +142,7 @@ module Xtr
     # Returns true if the reservation exists.
     # Raises NoSuchReservationError otherwise.
     def ensure_reservation(reservation_id)
-      reservation = reservations[reservation_id]
-      old_reservation = old_reservations[reservation_id]
-
-      return true if reservation || old_reservation
+      return true if reservations[reservation_id]
       raise NoSuchReservationError,
         "No reservation with identifier #{reservation_id} exists"
     end
@@ -168,7 +161,9 @@ module Xtr
     def delete_reservation(reservation)
       if reservation.zero?
         reservations.delete(reservation.uuid)
-        old_reservations[reservation.uuid] = reservation
+        nil
+      else
+        reservation.uuid
       end
     end
   end

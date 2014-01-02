@@ -99,12 +99,12 @@ module Xtr
 
     # Public: Release the order amount.
     def release(amount = nil)
-      account.release(offered, reserve_id, amount)
+      @reserve_id = account.release(offered, reserve_id, amount) if reserve_id
     end
 
     # Public: Debit the reserved order amount.
     def debit(amount = nil)
-      account.debit_reserved(offered, reserve_id, amount)
+      @reserve_id = account.debit_reserved(offered, reserve_id, amount) if reserve_id
     end
 
     # Public: Credit received amount in received instrument.
