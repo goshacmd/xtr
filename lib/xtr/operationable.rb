@@ -24,7 +24,7 @@ module Xtr
       block = self.class.op(op_name)
 
       if block
-        instance_exec(*args, &block)
+        context.instance_exec(*args, &block)
       else
         raise NoSuchOperationError, "No operation named #{op_name} was registered"
       end
@@ -36,7 +36,7 @@ module Xtr
       block = self.class.query(name)
 
       if block
-        instance_exec(*args, &block)
+        context.instance_exec(*args, &block)
       else
         raise NoSuchOperationError, "No operation named #{query} was registered"
       end

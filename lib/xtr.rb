@@ -20,6 +20,7 @@ module Xtr
   autoload :Instruments
   autoload :Limit
   autoload :Market
+  autoload :OperationInterface
   autoload :Operationable
   autoload :Order
   autoload :Orderbook
