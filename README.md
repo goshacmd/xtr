@@ -81,19 +81,19 @@ Crediting and debiting account balances is easy:
 ```ruby
 # Crediting
 engine.execute :DEPOSIT, account, "USD", 100_000.00
-engine.execute :BALANCE, account, "USD"
+engine.query :BALANCE, account, "USD"
 # => { currency: USD, available: 100_000.00, reserved: 0.00 }
 
 # Debiting
 engine.execute :WITHDRAW, account, "USD", 25_000.00
-engine.execute :BALANCE, account, "USD"
+engine.query :BALANCE, account, "USD"
 # => { currency: USD, available: 75_000.00, reserved: 0.00 }
 ```
 
 ### Explore available markets
 
 ```ruby
-engine.execute :MARKETS
+engine.query :MARKETS
 => { currency: [BTC/USD, ...], stock: [USD:AAPL, USD:GOOG, ...] }
 ```
 
