@@ -159,6 +159,19 @@ module Xtr
         :LMT
       end
 
+      def as_json
+        {
+          id: uuid,
+          market: market.to_s,
+          direction: direction,
+          price: price.to_s,
+          quantity: quantity.to_s,
+          remainder: remainder.to_s,
+          status: status,
+          created_at: created_at.to_s
+        }
+      end
+
       def inspect
         "#<#{self.class.name} market=#{market.pair} dir=#{direction} price=#{price} qty=#{quantity} left=#{remainder} id=#{uuid} account=#{account.uuid}>"
       end

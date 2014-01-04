@@ -105,6 +105,14 @@ module Xtr
       end
     end
 
+    def as_json
+      {
+        instrument: instrument.name,
+        available: available.to_s,
+        reserved: reserved.to_s
+      }
+    end
+
     def inspect
       "#<#{self.class.name} account=#{account.uuid} instrument=#{instrument.name} available=#{available} reserved=#{reserved}>"
     end

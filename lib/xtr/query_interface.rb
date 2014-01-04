@@ -19,38 +19,18 @@ module Xtr
       account = account(account_id)
 
       instrument_registry.names.map do |instrument_name|
-        query(:BALANCE, account_id, instrument_name)
+        account.balance(instrument_name).as_json
       end
     end
 
     # Query: Get account's balance in specific instrument.
     query :BALANCE do |account_id, instrument|
-      account = account(account_id)
-      balance = account.balance(instrument)
-
-      {
-        instrument: instrument,
-        available: balance.available.to_s,
-        reserved: balance.reserved.to_s
-      }
+      account(account_id).balance(instrument).as_json
     end
 
     # Query: Get account's open orders.
     query :OPEN_ORDERS do |account_id|
-      account = account(account_id)
-
-      account.open_orders.map do |order|
-        {
-          id: order.uuid,
-          market: order.market.pair,
-          direction: order.direction,
-          price: order.price.to_s,
-          quantity: order.quantity.to_s,
-          remainder: order.remainder.to_s,
-          status: order.status,
-          created_at: order.created_at.to_s
-        }
-      end
+      account(account_id).open_orders.map(&:as_json)
     end
 
     # Query: Get a list of markets.
