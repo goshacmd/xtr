@@ -9,6 +9,8 @@ describe Xtr::Market::Order do
 
   subject(:order) { described_class.new(account, market, :buy, price, quantity) }
 
+  before { market.stub(:convert_quantity) { |q| q.to_i } }
+
   describe '#add_fill' do
     let(:fill_price) { 90 }
     let(:fill_amount) { 2 }

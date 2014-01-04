@@ -19,6 +19,8 @@ module Xtr
     delegate :bids, :asks, :best_bid, :best_ask, :last_price,
       :add_order, :cancel_order, to: :orderbook
 
+    delegate :convert_quantity, to: :left
+
     # Public: Initialize a market.
     #
     # type  - The Symbol type name. Possible values: :currency, :stock.

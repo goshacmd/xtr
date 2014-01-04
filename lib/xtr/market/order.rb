@@ -5,20 +5,22 @@ module Xtr
       attr_reader :account, :market, :direction, :price, :quantity, :uuid,
         :reserve_id, :remainder, :fills, :status, :created_at, :canceled_at
 
+      delegate :convert_quantity, to: :market
+
       # Public: Initialize an order.
       #
       # account   - The Account initiating the order.
       # market    - The Market to create an order in.
       # direction - The Symbol direction of the order. Possible: :buy, :sell.
       # price     - The BigDecimal price.
-      # quantity  - The BigDecimal quantity.
+      # quantity  - The quantity.
       def initialize(account, market, direction, price, quantity, uuid = Util.uuid)
         @account = account
         @market = market
         @direction = direction
         @price = Util.big_decimal(price)
-        @quantity = Util.big_decimal(quantity)
-        @remainder = Util.big_decimal(quantity)
+        @quantity = convert_quantity(quantity)
+        @remainder = @quantity
         @fills = []
         @filled = false
         @status = :initialized
@@ -69,7 +71,7 @@ module Xtr
       # Public: Calculate offered amount.
       #
       # price    - The optional BigDecimal price. Default: order price.
-      # quantity - The Optional BigDecimal quantity. Default: order quantity.
+      # quantity - The optional quantity. Default: order quantity.
       def offered_amount(price = price, quantity = quantity)
         buy? ? price * quantity : quantity
       end
@@ -82,7 +84,7 @@ module Xtr
       # Public: Calculate received amount.
       #
       # price    - The optional BigDecimal price. Default: order price.
-      # quantity - The Optional BigDecimal quantity. Default: order quantity.
+      # quantity - The optional quantity. Default: order quantity.
       def received_amount(price = price, quantity = quantity)
         sell? ? price * quantity : quantity
       end
