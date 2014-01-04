@@ -55,26 +55,12 @@ module Xtr
 
     # Query: Get a list of markets.
     query :MARKETS do
-      markets.values.map do |market|
-        {
-          name: market.pair,
-          type: market.type
-        }
-      end
+      markets.values.map(&:as_json)
     end
 
     # Query: Get a ticker for the market.
     query :TICKER do |market_name|
-      market = market(market_name)
-      last_price = market.last_price
-      bid = market.best_bid
-      ask = market.best_ask
-
-      {
-        bid: bid.to_s,
-        ask: ask.to_s,
-        last_price: last_price.to_s
-      }
+      market(market_name).ticker
     end
   end
 end

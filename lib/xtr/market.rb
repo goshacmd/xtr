@@ -32,6 +32,21 @@ module Xtr
       @orderbook = Orderbook.new
     end
 
+    # Public: Get ticker info.
+    def ticker
+      bid = best_bid
+      ask = best_ask
+      spread = bid && ask ? ask - bid : nil
+
+      {
+        bid: bid.to_s,
+        ask: ask.to_s,
+        spread: spread.to_s,
+        last_price: last_price.to_s
+      }
+    end
+
+    # Public: Get a string code of the market,
     def pair
       case type
       when :currency
@@ -39,6 +54,10 @@ module Xtr
       when :stock
         [@right.name, @left.name].join(':') # => USD:AAPL
       end
+    end
+
+    def as_json
+      { name: pair, type: type }
     end
 
     def to_s
