@@ -5,17 +5,20 @@ module Xtr
     include Operationable
 
     attr_reader :supermarket, :balance_sheet, :instruments,
-      :instrument_registry, :operation_interface
+      :instrument_registry, :operation_interface, :query_interface
 
     delegate :account, to: :balance_sheet
     delegate :market, :markets, to: :supermarket
-    delegate :execute, :query, to: :operation_interface
+    delegate :execute, to: :operation_interface
+    delegate :query, to: :query_interface
 
+    # Public: Initialize an engine.
     def initialize(instruments)
       @supermarket = Supermarket.new(self)
       @balance_sheet = BalanceSheet.new(self)
       @instrument_registry = InstrumentRegistry.new(instruments)
       @operation_interface = OperationInterface.new(self)
+      @query_interface = QueryInterface.new(self)
 
       supermarket.build_markets(instrument_registry.list)
     end

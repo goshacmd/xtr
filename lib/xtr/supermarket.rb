@@ -14,7 +14,7 @@ module Xtr
     # instruments - The Hash of instruments. Keys are categories (:currency, :stock),
     #               values are arrays of instruments.
     def build_markets(instruments)
-      @markets = Hash[*instruments.map do |(category, list)|
+      @markets = instruments.map do |(category, list)|
         case category
         when :currency
           list.combination(2).map do |left, right|
@@ -25,7 +25,7 @@ module Xtr
             Market.new(:stock, stock, currency)
           end
         end
-      end.flatten.map { |m| [m.pair, m] }.flatten]
+      end.flatten.map { |m| [m.pair, m] }.to_h
     end
 
     # Public: Get a market for the instrument pair.

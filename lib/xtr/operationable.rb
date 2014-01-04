@@ -1,5 +1,3 @@
-require 'active_support/concern'
-
 module Xtr
   # Public: A module to add operation capabilities to the class.
   #
@@ -30,31 +28,12 @@ module Xtr
       end
     end
 
-    # Public: Execute a query with name `query_name` and pass other
-    # arguments to the query block.
-    def query(name, *args)
-      block = self.class.query(name)
-
-      if block
-        context.instance_exec(*args, &block)
-      else
-        raise NoSuchOperationError, "No operation named #{query} was registered"
-      end
-    end
-
     module ClassMethods
       # Public: Get/set operation block.
       def op(name, &block)
         @ops ||= {}
         @ops[name] = block if block_given?
         @ops[name]
-      end
-
-      # Public: Get/set query block.
-      def query(name, &block)
-        @queries ||= {}
-        @queries[name] = block if block_given?
-        @queries[name]
       end
     end
   end
