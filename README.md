@@ -26,6 +26,8 @@ prepended with currency code (USD:AAPL, EUR:GOOG, CNY:TWTR, BTC:V).
 **Account** is a collection of balances in different instruments. It is
 identified by a UUID string returned from the `CREATE_ACCONT` command.
 
+Each balance has available and reserved amounts.
+
 ## Getting started
 
 To get started, you would need to instantiate an engine and pass it the list of
