@@ -1,9 +1,9 @@
 # xtr
 
-xtr is a trading engine.
+xtr is a trading engine. xtr is an experimental development.
 
-At the moment, xtr only supports LMT orders and everything is stored in
-the memory, and not persisted.
+At the moment, xtr only supports cash instruments trading, LIMIT orders, and
+everything is stored in the memory, and not persisted.
 
 ## Concepts
 
@@ -18,10 +18,14 @@ xtr identifies instruments simply by their codes.
 For example, a place where you can trade EUR for CNY or AAPL for USD is
 a market.
 
-There are two ways xtr identifies markets. If the market is
-currency-to-currency, it's identified by a currency pair (BTC/USD,
-BTC/EUR). If the market is for stocks, it is identified by a stock ticker
-prepended with currency code (USD:AAPL, EUR:GOOG, CNY:TWTR, BTC:V).
+There are two types of markets and they have different schemes of
+identified.
+
+Currency markets are identified by a currency pair (e.g. BTC/USD,
+BTC/EUR).
+
+Stock markets are identified by a stock ticker prepended with currency
+code (e.g USD:AAPL, EUR:GOOG, BTC:V).
 
 **Account** is a collection of balances in different instruments. It is
 identified by a UUID string returned from the `CREATE_ACCONT` command.
@@ -66,6 +70,28 @@ In this example, the following markets will be generated:
   * USD:V
   * EUR:V
 
+### Markets
+
+#### Listing available markets
+
+```ruby
+engine.query :MARKETS
+# => [
+#      { name: "BTC/USD", type: :currency },
+#      { name: "USD:AAPL", type: :stock }
+#    ]
+```
+
+#### Querying tickers
+
+To get a ticker for a market, simply issue a TICKER query with market
+code as an argument:
+
+```ruby
+engine.query :TICKER, 'EUR:GOOG'
+# => { bid: 499.90, ask: 500.30, last_price: 500.10 }
+```
+
 ### Accounts
 
 To create an account, just call:
@@ -74,11 +100,13 @@ To create an account, just call:
 account = engine.execute :CREATE_ACCOUNT
 ```
 
-It will return account ID.
+It will return account ID. You will need it to manage balances and
+orders.
 
 #### Balance management
 
-Crediting and debiting account balances is easy:
+Crediting and debiting account balances is easy — just pass account ID,
+instrument name and amount:
 
 ```ruby
 # Crediting
@@ -92,16 +120,25 @@ engine.query :BALANCE, account, "USD"
 # => { currency: USD, available: 75_000.00, reserved: 0.00 }
 ```
 
-### Explore available markets
+#### Listing balances
 
 ```ruby
-engine.query :MARKETS
-=> { currency: [BTC/USD, ...], stock: [USD:AAPL, USD:GOOG, ...] }
+engine.query :BALANCES, account
+# => [{
+#       instrument: 'AAPL',
+#       available: 10,
+#       reserved: 5
+#    }]
 ```
 
-### Creating orders
+### Orders
 
-Only LMT orders are supported currently.
+#### Creating orders
+
+To create an order, execute BUY/SELL operation with account ID, market
+code, price, and quantity as arguments:
+
+*(Only LMT orders are supported currently.)*
 
 ```ruby
 engine.execute :BUY, account, "BTC/USD", 999.99, 10
@@ -111,7 +148,18 @@ engine.execute :SELL, account, "EUR:AAPL", 600, 25
 When the orders are matched, balance transfers are performed between the
 accounts.
 
-### Getting open orders
+#### Canceling orders
+
+To cancel an order, execute CANCEL operation, passing account ID and
+order ID:
+
+```ruby
+engine.execute :CANCEL, account, order
+```
+
+#### Getting open orders
+
+You can query open orders for a particular account this way:
 
 ```ruby
 engine.query :OPEN_ORDERS, account
@@ -127,29 +175,6 @@ engine.query :OPEN_ORDERS, account
 #    }]
 ```
 
-### Canceling orders
-
-```ruby
-engine.execute :CANCEL, account, order
-```
-
-### Getting account balances
-
-```ruby
-engine.query :BALANCES, account
-# => [{
-#       instrument: 'AAPL',
-#       available: 10,
-#       reserved: 5
-#    }]
-```
-
-### Querying tickers
-
-```ruby
-engine.query :TICKER, 'EUR:GOOG'
-# => { bid: 499.90, ask: 500.30, last_price: 500.10 }
-```
 
 ## TODO
 
