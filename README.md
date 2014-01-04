@@ -5,33 +5,64 @@ xtr is a trading engine.
 At the moment, xtr only supports LMT orders and everything is stored in
 the memory, and not persisted.
 
-## Installation
+## Concepts
 
-Add this line to your application's Gemfile:
+**Engine** is the core of the trading system. Engine is responsible for executing
+user operations and queries.
 
-    gem 'xtr'
+**Instrument** is a tradeable asset. It can be stock or currency.
 
-And then execute:
+xtr identifies instruments simply by their codes.
 
-    $ bundle
+**Market** is a place where one kind of asset is traded for another.
+For example, a place where you can trade EUR for CNY or AAPL for USD is
+a market.
+
+There are two ways xtr identifies markets. If the market is
+currency-to-currency, it's identified by a currency pair (BTC/USD,
+BTC/EUR). If the market is for stocks, it is identified by a stock ticker
+prepended with currency code (USD:AAPL, EUR:GOOG, CNY:TWTR, BTC:V).
+
+**Account** is a collection of balances in different instruments. It is
+identified by a UUID string returned from the `CREATE_ACCONT` command.
 
 ## Getting started
 
-Engine is the core of the trading system. Engine is responsible for executing
-user operations and queries.
-
-First, you would need to instantiate an engine and pass it the list of
+To get started, you would need to instantiate an engine and pass it the list of
 instruments you want it to support. Instruments are broken down by
 category. At the moment, xtr supports currency and stock instruments.
 
 ```ruby
-instruments = {
-  currency: [:BTC, :USD, :EUR, :CNY],
-  stock: [:AAPL, :GOOG, :TWTR, :MSFT, :V, :MA]
-}
-
-engine = Xtr::Engine.new instruments
+engine = Xtr::Engine.new({
+  currency: [:BTC, :USD, :EUR],
+  stock: [:AAPL, :GOOG, :TWTR, :V]
+})
 ```
+
+Engine will then create *markets* for described instruments. By default,
+it will create a market for each pair of currencies and a market for
+each stock in every supported currency.
+
+In this example, the following markets will be generated:
+
+* currency
+  * BTC/USD
+  * BTC/EUR
+  * USD/EUR
+
+* stock
+  * BTC:AAPL
+  * USD:AAPL
+  * EUR:AAPL
+  * BTC:GOOG
+  * USD:GOOG
+  * EUR:GOOG
+  * BTC:TWTR
+  * USD:TWTR
+  * EUR:TWTR
+  * BTC:V
+  * USD:V
+  * EUR:V
 
 ### Accounts
 
