@@ -8,9 +8,9 @@ module Xtr
     end
 
     def self.big_decimal(number)
-      if number.is_a?(BigDecimal)
+      if BigDecimal === number
         number
-      elsif number.is_a?(Float)
+      elsif Float === number
         BigDecimal.new(number.to_s)
       else
         BigDecimal.new(number)
@@ -19,6 +19,14 @@ module Xtr
 
     def self.zero
       self.big_decimal(0)
+    end
+
+    def self.number_to_string(number)
+      if BigDecimal === number
+        number.to_s('F')
+      else
+        number.to_s
+      end
     end
   end
 end

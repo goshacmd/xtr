@@ -108,21 +108,17 @@ module Xtr
     def as_json
       {
         instrument: instrument.name,
-        available: available.to_s,
-        reserved: reserved.to_s
+        available: Util.number_to_string(available),
+        reserved: Util.number_to_string(reserved)
       }
     end
 
     def inspect
-      "#<#{self.class.name} account=#{account.uuid} instrument=#{instrument.name} available=#{available} reserved=#{reserved}>"
+      "#<#{self.class.name} account=#{account.uuid} instrument=#{instrument.name} available=#{Util.number_to_string(available)} reserved=#{Util.number_to_string(reserved)}>"
     end
 
     def to_s
-      if instrument.class.quantity == :decimal
-        "(#{instrument.name} - available: #{available.to_s('F')}, reserved: #{reserved.to_s('F')})"
-      else
-        "(#{instrument.name} - available: #{available}, reserved: #{reserved})"
-      end
+      "(#{instrument.name} - available: #{Util.number_to_string(available)}, reserved: #{Util.number_to_string(reserved)})"
     end
 
     private

@@ -45,7 +45,7 @@ module Xtr
     end
 
     def inspect
-      "#<#{self.class.name} id=#{uuid} balance=#{balance.uuid} amount=#{amount.to_f} remainder=#{remainder}>"
+      "#<#{self.class.name} id=#{uuid} balance=#{balance.uuid} amount=#{Util.number_to_string(amount)} remainder=#{Util.number_to_string(remainder)}>"
     end
 
     private

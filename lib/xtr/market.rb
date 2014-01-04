@@ -39,10 +39,10 @@ module Xtr
       spread = bid && ask ? ask - bid : nil
 
       {
-        bid: bid.to_s,
-        ask: ask.to_s,
-        spread: spread.to_s,
-        last_price: last_price.to_s
+        bid: Util.number_to_string(bid),
+        ask: Util.number_to_string(ask),
+        spread: Util.number_to_string(spread),
+        last_price: Util.number_to_string(last_price)
       }
     end
 

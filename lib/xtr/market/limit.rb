@@ -77,11 +77,11 @@ module Xtr
       end
 
       def to_s
-        "#{price.to_f} x #{size.to_f}"
+        "#{Util.number_to_string(price)} x #{Util.number_to_string(size)}"
       end
 
       def inspect
-        "#<#{self.class.name} price=#{price.to_f} direction=#{direction} order_count=#{orders.count} size=#{size.to_f}>"
+        "#<#{self.class.name} price=#{Util.number_to_string(price)} direction=#{direction} order_count=#{orders.count} size=#{Util.number_to_string(size)}>"
       end
     end
   end
