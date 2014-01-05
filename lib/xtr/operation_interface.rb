@@ -14,11 +14,6 @@ module Xtr
       @engine
     end
 
-    # Operation: Create an account.
-    op :CREATE_ACCOUNT do
-      account.uuid
-    end
-
     # Operation: Deposit amount of instrument to account.
     op :DEPOSIT do |account_id, instrument, amount|
       account(account_id).credit(instrument, amount)

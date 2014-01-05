@@ -30,7 +30,7 @@ Stock markets are identified by a stock ticker prepended with currency
 code (e.g. USD:AAPL, EUR:GOOG, BTC:V).
 
 **Account** is a collection of balances in different instruments. It is
-identified by a UUID string returned from the `CREATE_ACCONT` command.
+identified by a UUID string returned from `engine.account`.
 
 Each balance has available and reserved amounts.
 
@@ -99,7 +99,7 @@ engine.query :TICKER, 'EUR:GOOG'
 To create an account, just call:
 
 ```ruby
-account = engine.execute :CREATE_ACCOUNT
+account = engine.new_account
 ```
 
 It will return account ID. You will need it to manage balances and

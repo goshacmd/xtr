@@ -2,13 +2,14 @@ require 'xtr'
 
 #Xtr.logger = Logger.new STDOUT
 
-engine = Xtr::Engine.new \
+engine = Xtr::Engine.new({
   currency: [:BTC, :USD]
+})
 
 m = engine.market("BTC/USD")
 bs = engine.balance_sheet
 
-accounts = (0..10_000).map { engine.execute :CREATE_ACCOUNT }
+accounts = (0..10_000).map { engine.new_account }
 
 accounts.each do |account|
   engine.execute :DEPOSIT, account, "BTC", rand(0..1_000)

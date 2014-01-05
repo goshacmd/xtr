@@ -2,15 +2,16 @@ require 'xtr'
 
 Xtr.logger = Logger.new STDOUT
 
-engine = Xtr::Engine.new \
+engine = Xtr::Engine.new({
   currency: [:BTC, :USD],
   stock: [:AAPL, :GOOG, :V]
+})
 
 m = engine.market("BTC/USD")
 bs = engine.balance_sheet
 
-a1 = engine.execute :CREATE_ACCOUNT
-a2 = engine.execute :CREATE_ACCOUNT
+a1 = engine.new_account
+a2 = engine.new_account
 
 engine.execute :DEPOSIT, a1, "USD", 30_000.00
 engine.execute :DEPOSIT, a2, "BTC", 120.00

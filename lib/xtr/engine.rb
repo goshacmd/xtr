@@ -36,5 +36,12 @@ module Xtr
     def supported_instrument?(name)
       instrument_registry.supported?(name)
     end
+
+    # Create a new account and return its ID.
+    #
+    # @return [String] new account ID
+    def new_account
+      account.uuid
+    end
   end
 end
