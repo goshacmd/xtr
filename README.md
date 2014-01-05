@@ -5,6 +5,8 @@ xtr is a trading engine. xtr is an experimental development.
 At the moment, xtr only supports cash instruments trading, LIMIT orders, and
 everything is stored in the memory, and not persisted.
 
+[Documentation](http://rubydoc.info/github/goshakkk/xtr/master/frames)
+
 ## Concepts
 
 **Engine** is the core of the trading system. Engine is responsible for executing
@@ -19,13 +21,13 @@ For example, a place where you can trade EUR for CNY or AAPL for USD is
 a market.
 
 There are two types of markets and they have different schemes of
-identified.
+their identifiers.
 
 Currency markets are identified by a currency pair (e.g. BTC/USD,
 BTC/EUR).
 
 Stock markets are identified by a stock ticker prepended with currency
-code (e.g USD:AAPL, EUR:GOOG, BTC:V).
+code (e.g. USD:AAPL, EUR:GOOG, BTC:V).
 
 **Account** is a collection of balances in different instruments. It is
 identified by a UUID string returned from the `CREATE_ACCONT` command.
