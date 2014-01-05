@@ -4,12 +4,62 @@ require 'delegate'
 module Xtr
   class Market
     module Trees
-      # Public: A basic tree.
+      # A basic tree.
+      #
+      # @abstract
       class Basic < Delegator
         def initialize
           @tree = RBTree.new
           super(@tree)
         end
+
+        # Get the best price.
+        #
+        # @abstract
+        #
+        # @return [BigDecimal]
+        def best_price
+          raise NotImplementedError
+        end
+
+        # Get the limit at the best price.
+        #
+        # @abstract
+        #
+        # @return [Limit]
+        def best_limit
+          raise NotImplementedError
+        end
+
+        # Delete the best limit.
+        #
+        # @abstract
+        def delete_best
+          raise NotImplementedError
+        end
+
+        # @abstract
+        #
+        # @yield [Limit]
+        def take_best_while
+          raise NotImplementedError
+        end
+
+        # Check if an order with price +price+ can be filled from the tree.
+        #
+        # @abstract
+        #
+        # @return [Boolean]
+        def can_fill_price?(price)
+          raise NotImplementedError
+        end
+
+        # Delete blank limit records.
+        def cleanup
+          delete_best while best_limit && best_limit.size == 0
+        end
+
+        private
 
         def __getobj__
           @tree
@@ -18,38 +68,9 @@ module Xtr
         def __setobj__(obj)
           @tree = obj
         end
-
-        # Public: Get the best price.
-        def best_price
-          raise NotImplementedError
-        end
-
-        # Public: Get the limit at the best price.
-        def best_limit
-          raise NotImplementedError
-        end
-
-        # Public: Delete the best limit.
-        def delete_best
-          raise NotImplementedError
-        end
-
-        def take_best_while
-          raise NotImplementedError
-        end
-
-        # Public: Check if an order with price `price` can be filled from the tree.
-        def can_fill_price?(price)
-          raise NotImplementedError
-        end
-
-        # Public: Delete blank limit records.
-        def cleanup
-          delete_best while best_limit && best_limit.size == 0
-        end
       end
 
-      # Public: A bids tree.
+      # A bids tree.
       class Bids < Basic
         def best_price
           last && last[0]
@@ -72,7 +93,7 @@ module Xtr
         end
       end
 
-      # Public: An asks tree.
+      # An asks tree.
       class Asks < Basic
         def best_price
           first && first[0]

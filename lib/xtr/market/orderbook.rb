@@ -1,29 +1,33 @@
 module Xtr
   class Market
-    # Public: An order book.
+    # An order book.
     class Orderbook
       attr_reader :bids, :asks, :last_price
 
-      # Public: Initialize an order book.
+      # Initializes a new +Orderbook+.
       def initialize
         @bids = Trees::Bids.new
         @asks = Trees::Asks.new
         @last_price = nil
       end
 
-      # Public: Get best ask.
+      # Get best ask.
+      #
+      # @return [BigDecimal]
       def best_ask
         @asks.best_price
       end
 
-      # Public: Get best bid.
+      # Get best bid.
+      #
+      # @return [BigDecimal]
       def best_bid
         @bids.best_price
       end
 
-      # Public: Add a new order.
+      # Add a new order.
       #
-      # order - The Order object.
+      # @param order [Order]
       def add_order(order)
         price = order.price
         tree = tree_for_direction(order.direction)
@@ -39,9 +43,9 @@ module Xtr
         tree.cleanup
       end
 
-      # Public: Cancel an order.
+      # Cancel an order.
       #
-      # order - The order object.
+      # @param order [Order]
       def cancel_order(order)
         return unless order.unfilled?
 
@@ -55,17 +59,23 @@ module Xtr
         tree.delete(price) if limit && limit.size.zero?
       end
 
-      # Public: Get the tree for order direction.
+      # Get the tree for order direction.
+      #
+      # @return [Trees::Basic]
       def tree_for_direction(direction)
         direction == :buy ? @bids : @asks
       end
 
-      # Public: Get the tree opposite of order direction.
+      # Get the tree opposite of order direction.
+      #
+      # @return [Trees::Basic]
       def tree_opposite_direction(direction)
         direction == :buy ? @asks : @bids
       end
 
-      # Public: Get array of limits that can fill `amount`.
+      # Get list of limits that can fill +amount+.
+      #
+      # @return [Array<Order>]
       def limits_to_fill(tree, amount)
         remaining = amount
         fills = []
@@ -81,9 +91,9 @@ module Xtr
         final_limits.map(&:last).zip(fills)
       end
 
-      # Public: Get the best offer from the opposite tree.
+      # Get the best offer from the opposite tree.
       #
-      # order - The Order object.
+      # @param order [Order]
       def fill_order(order)
         opposite = tree_opposite_direction(order.direction)
 

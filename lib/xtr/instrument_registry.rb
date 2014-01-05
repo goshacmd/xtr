@@ -1,17 +1,26 @@
 module Xtr
-  # Public: A registry of supported instruments.
+  # A registry of supported instruments.
   class InstrumentRegistry
     class << self
-      # Public: Convert a hash list of instrument names to a hash list
+      # Convert a hash list of instrument names to a hash list
       # of instrument instances.
+      #
+      # @param list [Hash{Symbol => Array<Symbol>}]
+      #
+      # @return [Hash{Symbol => Array<Instruments::Instrument>}]
       def build_instruments(list)
         list.map do |category, sublist|
           [category, build_instrument_sublist(category, sublist)]
         end.to_h
       end
 
-      # Public: Given an instrument category and names list, build an
+      # Given an instrument category and names list, build an
       # array of instrument instances.
+      #
+      # @param category [Symbol] category name (+:currency+ or +:stock+)
+      # @param names [Array<Symbol>] list of instrument names
+      #
+      # @return [Array<Instruments::Instrument>]
       def build_instrument_sublist(category, names)
         case category
         when :currency
@@ -26,13 +35,11 @@ module Xtr
 
     delegate :[], to: :name_instrument
 
-    # Public: Initialize a registry.
+    # Initialize a new +InstrumentRegistry+.
     #
-    # list - The Hash list of instruments. Keys are categories
-    #        (:currency, :stock), values are arrays of instruments.
+    # @param list [Hash{Symbol => Array<Symbol>}] map of instruments.
     #
-    # Examples
-    #
+    # @example
     #   ir = InstrumentRegistry.new {
     #     currency: [:USD, :EUR],
     #     stock: [:AAPL, :GOOG]
@@ -41,24 +48,34 @@ module Xtr
       @list = self.class.build_instruments(list)
     end
 
-    # Public: Get a simple hash of instrument name -> instrument.
+    # Get a simple hash of instrument name -> instrument.
+    #
+    # @return [Hash{String => Instruments::Instrument}]
     def name_instrument
       @name_instrument ||= list.values.flatten.map do |instrument|
         [instrument.name, instrument]
       end.to_h
     end
 
-    # Public: Get an array of instrument names.
+    # Get an array of instrument names.
+    #
+    # @return [Array<String>]
     def names
       name_instrument.keys
     end
 
-    # Public: Get an array of instrument instances.
+    # Get an array of instrument instances.
+    #
+    # @return [Array<Instruments::Instrument>]
     def instruments
       name_instrument.values
     end
 
-    # Public: Check whether an instrument is supported.
+    # Check whether an instrument is supported.
+    #
+    # @param name [String]
+    #
+    # @return [Boolean]
     def supported?(name)
       name_instrument.has_key?(name)
     end

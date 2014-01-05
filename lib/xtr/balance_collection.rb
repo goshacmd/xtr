@@ -1,11 +1,11 @@
 module Xtr
-  # Public: A collection of account balances in different instruments.
+  # A collection of account balances in different instruments.
   class BalanceCollection
     attr_reader :account, :engine
 
-    # Public: Initialize a balance collection.
+    # Initialize a new +BalanceCollection+.
     #
-    # account - The Account object.
+    # @param account [Account]
     def initialize(account)
       @account = account
       @engine = account.engine
@@ -20,15 +20,17 @@ module Xtr
       end
     end
 
-    # Public: Get a balance for instrument.
+    # Get a balance for instrument.
     #
-    # instrument - The String instrument name or Instrument object.
+    # @param instrument [String, Symbol, Instrument] instrument code
+    #
+    # @return [CashBalance]
     def [](instrument)
       instrument = instrument.name if Instruments::Instrument === instrument
       @hash[instrument.to_s]
     end
 
-    # Public: Get an array of balances, sorted by instrument name.
+    # Get an array of balances, sorted by instrument name.
     def to_a
       @hash.values.sort_by { |b| b.instrument.name }
     end

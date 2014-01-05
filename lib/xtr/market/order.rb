@@ -1,19 +1,20 @@
 module Xtr
   class Market
-    # Public: An orderbook order.
+    # An orderbook order.
     class Order
       attr_reader :account, :market, :direction, :price, :quantity, :uuid,
         :reserve_id, :remainder, :fills, :status, :created_at, :canceled_at
 
       delegate :convert_quantity, to: :market
 
-      # Public: Initialize an order.
+      # Initialize a new +Order+.
       #
-      # account   - The Account initiating the order.
-      # market    - The Market to create an order in.
-      # direction - The Symbol direction of the order. Possible: :buy, :sell.
-      # price     - The BigDecimal price.
-      # quantity  - The quantity.
+      # @param account [Account] account that initiated an order
+      # @param market [Market] market to create order in
+      # @param direction [Symbol] order direction (+:buy+ or +:sell+)
+      # @param price [BigDecimal]
+      # @param quantity [Numeric]
+      # @param uuid [String] order identifier
       def initialize(account, market, direction, price, quantity, uuid = Util.uuid)
         @account = account
         @market = market
@@ -28,94 +29,102 @@ module Xtr
         @created_at = Time.now
       end
 
-      # Public: Check if order direction is :buy.
+      # Check if order direction is +:buy+.
       def buy?
         direction == :buy
       end
 
-      # Public: Check if order direction is :sell.
+      # Check if order direction is +:sell+.
       def sell?
         direction == :sell
       end
 
-      # Public: Check if order is new.
+      # Check if order is new.
       def new?
         status == :new
       end
 
-      # Public: Check if order is filled.
+      # Check if order is filled.
       def filled?
         status == :filled
       end
 
-      # Public: Check if order is paertially filled.
+      # Check if order is paertially filled.
       def partially_filled?
         status == :partially_filled
       end
 
-      # Public: Check if order is rejected.
+      # Check if order is rejected.
       def rejected?
         status == :rejected
       end
 
-      # Public: Check if order is canceled.
+      # Check if order is canceled.
       def canceled?
         status == :canceled
       end
 
-      # Public: Check if the order isn't filled.
+      # Check if the order isn't filled.
       def unfilled?
         new? || partially_filled?
       end
 
-      # Public: Calculate offered amount.
+      # Calculate offered amount.
       #
-      # price    - The optional BigDecimal price. Default: order price.
-      # quantity - The optional quantity. Default: order quantity.
+      # @param price [BigDecimal]
+      # @param quantity [Numeric]
+      #
+      # @return [Numeric]
       def offered_amount(price = price, quantity = quantity)
         buy? ? price * quantity : quantity
       end
 
-      # Public: Get the offered instrument symbol.
+      # Get the offered instrument symbol.
+      #
+      # @return [Symbol]
       def offered
         buy? ? market.right.name : market.left.name
       end
 
-      # Public: Calculate received amount.
+      # Calculate received amount.
       #
-      # price    - The optional BigDecimal price. Default: order price.
-      # quantity - The optional quantity. Default: order quantity.
+      # @param price [BigDecimal]
+      # @param quantity [Numeroc]
+      #
+      # @return [Numeric]
       def received_amount(price = price, quantity = quantity)
         sell? ? price * quantity : quantity
       end
 
-      # Public: Get the received instrument symbol.
+      # Get the received instrument symbol.
+      #
+      # @return [Symbol]
       def received
         sell? ? market.right.name : market.left.name
       end
 
-      # Public: Reserve the order amount.
+      # Reserve the order amount.
       def reserve
         @reserve_id = account.reserve(offered, offered_amount)
         account.open_orders << self
       end
 
-      # Public: Release the order amount.
+      # Release the order amount.
       def release(amount = nil)
         @reserve_id = account.release(offered, reserve_id, amount) if reserve_id
       end
 
-      # Public: Debit the reserved order amount.
+      # Debit the reserved order amount.
       def debit(amount = nil)
         @reserve_id = account.debit_reserved(offered, reserve_id, amount) if reserve_id
       end
 
-      # Public: Credit received amount in received instrument.
+      # Credit received amount in received instrument.
       def credit(amount = received_amount)
         account.credit(received, amount)
       end
 
-      # Public: Release order amount and remove from account's open orders if it
+      # Release order amount and remove from account's open orders if it
       # is filled or canceled.
       def release_delete
         if filled? || canceled?
@@ -124,7 +133,10 @@ module Xtr
         end
       end
 
-      # Public: Fill the order with `amount` at `price`.
+      # Fill the order with +amount+ at +price+.
+      #
+      # @param amount [BigDecimal]
+      # @param price [BigDecimal]
       def add_fill(amount, price)
         @fills << [price, amount]
         @remainder -= amount
@@ -134,15 +146,17 @@ module Xtr
         release_delete
       end
 
-      # Public: Cancel the order.
+      # Cancel the order.
       def cancel!
         @status = :canceled
         @canceled_at = Time.now
         release_delete
       end
 
-      # Public: Change status from initialized to new.
+      # Change status from initialized to new.
       # Reserve the funds.
+      #
+      # @return [Boolean] whether preparation was sucessful or not
       def prepare_add
         return unless status == :initialized
 
@@ -154,7 +168,9 @@ module Xtr
         false
       end
 
-      # Public: Get order type.
+      # Get order type.
+      #
+      # @return [Symbol]
       def type
         :LMT
       end

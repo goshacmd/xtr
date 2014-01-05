@@ -5,31 +5,44 @@ module Xtr
     autoload :CurrencyInstrument
     autoload :StockInstrument
 
-    # Public: Abstract instrument.
+    # Abstract instrument.
     #
-    # Examples
+    # @abstract
     #
+    # @example
     #   class CurrencyInstrument < Instrument
     #     quantity :decimal
     #     type :currency
     #   end
     class Instrument
       class << self
-        # Public: Get/set the type of quantity of the instrument.
+        # Get/set the type of quantity of the instrument.
         #
-        # type - The Symbol quantity type. Possible values: :decimal, :integer.
+        # @param type [Symbol] quantity type (+:decimal+ or +:integer+)
+        #
+        # @return [Symbol]
         def quantity(type = nil)
           @quantity = type if type
           @quantity
         end
 
-        # Public: Get/set the instrument type (name).
+        # Get/set the instrument type (name).
+        #
+        # @param type [Symbol, String] instrument type
+        #
+        # @return [Symbol, String]
         def type(type = nil)
           @type = type if type
           @type
         end
 
-        # Public: Convert a number to quantity of instrument type.
+        # Convert a number to quantity of instrument type.
+        #
+        # @param number [String, Numeric]
+        #
+        # @raise [XtrError]
+        #
+        # @return [Integer, BigDecimal]
         def convert_quantity(number)
           case quantity
           when :decimal
@@ -44,12 +57,15 @@ module Xtr
 
       delegate :convert_quantity, to: :class
 
-      # Public: Get instrument name.
+      # Get instrument name.
+      #
+      # @abstract
       def name
         raise NotImplementedError
       end
     end
 
+    # Cash instrument.
     class CashInstrument < Instrument
     end
   end

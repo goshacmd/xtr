@@ -1,8 +1,7 @@
 module Xtr
-  # Public: A market for an instrument pair.
+  # A market for an instrument pair.
   #
-  # Examples
-  #
+  # @example
   #   btcusd = Market.new :currency, BTC, USD
   #   aapl = Market.new :stock, AAPL, USD
   class Market
@@ -21,18 +20,20 @@ module Xtr
 
     delegate :convert_quantity, to: :left
 
-    # Public: Initialize a market.
+    # Initialize a new +Market+.
     #
-    # type  - The Symbol type name. Possible values: :currency, :stock.
-    # left  - The Symbol left instrument name.
-    # right - The Symbol right instrument name.
+    # @param type [Symbol] market type (+:currency+ or +:stock+)
+    # @param left [Instruments::Instrument] left instrument
+    # @param right [Instruments::Instrument] right instrument
     def initialize(type, left, right)
       @type = type
       @left, @right = left, right
       @orderbook = Orderbook.new
     end
 
-    # Public: Get ticker info.
+    # Get ticker info.
+    #
+    # @return [Hash]
     def ticker
       bid = best_bid
       ask = best_ask
@@ -46,7 +47,9 @@ module Xtr
       }
     end
 
-    # Public: Get a string code of the market,
+    # Get a string code of the market.
+    #
+    # @return [String]
     def pair
       case type
       when :currency

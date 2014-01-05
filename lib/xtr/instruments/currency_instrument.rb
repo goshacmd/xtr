@@ -1,11 +1,14 @@
 module Xtr
   module Instruments
-    # Public: Currency instrument.
+    # Currency instrument.
     class CurrencyInstrument < CashInstrument
       quantity :decimal
 
       attr_reader :symbol
 
+      # Initialize a new +CurrencyInstrument+.
+      #
+      # @param symbol [String, Symbol] currency code
       def initialize(symbol)
         @symbol = symbol.to_s
       end

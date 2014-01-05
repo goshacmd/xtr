@@ -1,15 +1,15 @@
 module Xtr
-  # Public: A reservation from the balance.
+  # A reservation from the balance.
   class Reservation
     attr_reader :balance, :amount, :uuid, :released, :debited
 
     delegate :convert_quantity, to: :balance
 
-    # Public: Initialize a reservation.
+    # Initialize a new +Reservation+.
     #
-    # balance - The Balance object.
-    # amount  - The reservation amount.
-    # uuid    - The optional reservation identifier.
+    # @param balance [Balance] balance from which +amount+ is reserved
+    # @param amount [Numeric] reservation amount
+    # @param uuid [String] reservation identifier
     def initialize(balance, amount, uuid = Util.uuid)
       @balance = balance
       @amount = convert_quantity(amount)
@@ -18,27 +18,27 @@ module Xtr
       @uuid = uuid
     end
 
-    # Public: Get a reservation remainder.
+    # Get a reservation remainder.
     def remainder
       amount - released - debited
     end
 
-    # Public: Check if remainder amount is zero.
+    # Check if remainder amount is zero.
     def zero?
       remainder == 0
     end
 
-    # Public: Release an amount from the reservation.
+    # Release an amount from the reservation.
     #
-    # amount - The optional amount. Default: remainder.
+    # @param amount [Numeric]
     def release(amount = remainder)
       amount = convert_quantity(amount)
       @released += amount if ensure_can_use(amount)
     end
 
-    # Public: Release an amount from the reservation.
+    # Release an amount from the reservation.
     #
-    # amount - The optional amount. Default: remainder.
+    # @param amount [Numeric]
     def debit(amount = remainder)
       amount = convert_quantity(amount)
       @debited += amount if ensure_can_use(amount)
@@ -50,13 +50,15 @@ module Xtr
 
     private
 
-    # Private: Ensure a specific amount can be released/debited from the
+    # Ensure a specific amount can be released/debited from the
     # reservation.
     #
-    # amount - The amount.
+    # @param amount [Numeric]
     #
-    # Returns true if the needed amount is available.
-    # Raises NotEnoughFundsReservedError otherwise.
+    # @raise [NotEnoughFundsReservedError] if the needed amount is not
+    # available
+    #
+    # @return [Boolean]
     def ensure_can_use(amount)
       return true if remainder >= amount
       raise NotEnoughFundsReservedError,

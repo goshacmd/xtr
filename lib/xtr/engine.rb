@@ -1,6 +1,9 @@
 module Xtr
-  # Public: A trading engine. Essentially, a container for a supermarket and
+  # A trading engine. Essentially, a container for a supermarket and
   # a balance sheet.
+  #
+  # @example
+  #   engine = Engine.new({ currency: [:BTC, :USD] })
   class Engine
     include Operationable
 
@@ -12,7 +15,11 @@ module Xtr
     delegate :execute, to: :operation_interface
     delegate :query, to: :query_interface
 
-    # Public: Initialize an engine.
+    # Initialize a new +Engine+.
+    #
+    # @param instruments [Hash{Symbol => Array<Symbol>}] instruments map
+    #
+    # @see InstrumentRegistry.build_instruments
     def initialize(instruments)
       @supermarket = Supermarket.new(self)
       @balance_sheet = BalanceSheet.new(self)
@@ -23,7 +30,9 @@ module Xtr
       supermarket.build_markets(instrument_registry.list)
     end
 
-    # Public: Check whether an instrument is supported.
+    # Check whether an instrument is supported.
+    #
+    # @param name [String]
     def supported_instrument?(name)
       instrument_registry.supported?(name)
     end

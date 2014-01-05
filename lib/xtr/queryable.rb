@@ -1,8 +1,7 @@
 module Xtr
-  # Public: A module to add query capabilities to the class.
+  # A module to add query capabilities to the class.
   #
-  # Examples
-  #
+  # @example
   #   class Engine
   #     include Queryable
   #
@@ -16,8 +15,10 @@ module Xtr
   module Queryable
     extend ActiveSupport::Concern
 
-    # Public: Execute a query with name `query_name` and pass other
+    # Execute a query with name +query_name+ and pass other
     # arguments to the query block.
+    #
+    # @param name [String] query name
     def query(name, *args)
       block = self.class.query(name)
 
@@ -29,7 +30,9 @@ module Xtr
     end
 
     module ClassMethods
-      # Public: Get/set query block.
+      # Get/set query block.
+      #
+      # @return [Proc]
       def query(name, &block)
         @queries ||= {}
         @queries[name] = block if block_given?

@@ -1,8 +1,7 @@
 module Xtr
-  # Public: A module to add operation capabilities to the class.
+  # A module to add operation capabilities to the class.
   #
-  # Examples
-  #
+  # @example
   #   class Engine
   #     include Operationable
   #
@@ -16,8 +15,10 @@ module Xtr
   module Operationable
     extend ActiveSupport::Concern
 
-    # Public: Execute an operation with name `op_name` and pass
+    # Execute an operation with name +op_name+ and pass
     # other arguments to the operation block.
+    #
+    # @param op_name [Symbol] operation name
     def execute(op_name, *args)
       block = self.class.op(op_name)
 
@@ -29,7 +30,9 @@ module Xtr
     end
 
     module ClassMethods
-      # Public: Get/set operation block.
+      # Get/set operation block.
+      #
+      # @return [Proc]
       def op(name, &block)
         @ops ||= {}
         @ops[name] = block if block_given?

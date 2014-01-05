@@ -1,18 +1,17 @@
 module Xtr
-  # Public: An account.
+  # An account
   #
-  # Examples
-  #
+  # @example
   #   acc = Account.new(engine)
   #   acc.credit(:USD, 100.00)
   #   acc.balance(:USD) # => #<Balance account=123 instrument=USD available=100.00 reserved=0.00>
   class Account
     attr_reader :engine, :open_orders, :uuid
 
-    # Public: Initialize an account.
+    # Initialize a new +Account+.
     #
-    # engine - The Engine instance.
-    # uuid   - The UUID string. Default: auto-generate.
+    # @param engine [Engine]
+    # @param uuid [String] account UUID
     def initialize(engine, uuid = Util.uuid)
       @engine = engine
       @open_orders = []
@@ -21,9 +20,9 @@ module Xtr
       @uuid = uuid
     end
 
-    # Public: Get an account's balance in specific instrument.
+    # Get an account's balance in specific instrument.
     #
-    # instrument - The Symbol instrument code.
+    # @param instrument [Symbol] instrument code
     def balance(instrument)
       @balances[instrument]
     end
@@ -31,9 +30,30 @@ module Xtr
 
     # Delegate balance-related methods to balance for appropriate instrument.
     #
-    # Examples
+    # @!method credit
+    #   @see CashBalance#credit
+    #   @example
+    #     account.credit(USD, 100.00)
     #
-    #   account.credit(USD, 100.00)
+    # @!method debit
+    #   @see CashBalance#debit
+    #   @example
+    #     account.debit(USD, 100.00)
+    #
+    # @!method reserve
+    #   @see CashBalance#reserve
+    #   @example
+    #     account.resevre(USD, 50.00)
+    #
+    # @!method release
+    #   @see CashBalance#release
+    #   @example
+    #     account.release(USD, 'reserve-id')
+    #
+    # @!method debit_reserved
+    #   @see CashBalance#debit_reserved
+    #   @example
+    #     account.debit_reserved(USD, 'reserve-id')
     delegate :credit, :debit, :reserve, :release, :debit_reserved,
       to: 'balance(args.shift)'
 

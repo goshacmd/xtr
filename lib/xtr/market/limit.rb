@@ -1,13 +1,14 @@
 module Xtr
   class Market
-    # Public: Represents a group of orders at a specific price point in the
+    # Represents a group of orders at a specific price point in the
     # orderbook.
     class Limit
       attr_reader :price, :direction, :size, :orders, :filled_orders
 
-      # Public: Initialize a limit.
+      # Initialize a new +Limit+.
       #
-      # price - The BigDecimal price.
+      # @param price [BigDecimal] limit price level
+      # @param direction [Symbol] limit direction (+:buy+ or +:sell+)
       def initialize(price, direction)
         @price = price
         @direction = direction
@@ -16,32 +17,34 @@ module Xtr
         @filled_orders = []
       end
 
+      # @return [Boolean]
       def buy?
         direction == :buy
       end
 
+      # @return [Boolean]
       def sell?
         direction == :sell
       end
 
-      # Public: Add an order to the limit.
+      # Add an order to the limit.
       #
-      # order - The Order object.
+      # @param order [Order]
       def add(order)
         @orders << order
         @size += order.remainder
       end
 
-      # Public: Remove an order.
+      # Remove an order.
       #
-      # order - The Order object.
+      # @param order [Order]
       def remove(order)
         @size -= order.remainder if orders.delete(order)
       end
 
-      # Public: Get array of orders that can fill `amount`.
+      # Get array of orders that can fill +amount+.
       #
-      # Returns an array of [order, fill] pairs.
+      # @return [Array<Array>] +[order, fill]+ pairs
       def orders_to_fill(amount)
         remaining = amount
         fills = []
@@ -57,10 +60,10 @@ module Xtr
         final_orders.zip(fills)
       end
 
-      # Public: Fill `amount`.
+      # Fill +amount+.
       #
-      # amount      - The BigDecimal amount.
-      # other_order - The Order object.
+      # @param amount [BigDecimal]
+      # @param other_order [Order]
       def fill(amount, other_order)
         amount = Util.big_decimal(amount)
 

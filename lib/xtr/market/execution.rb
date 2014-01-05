@@ -1,10 +1,15 @@
 module Xtr
   class Market
-    # Public: An order execution.
+    # An order execution.
     class Execution
       attr_reader :buy_order, :sell_order, :amount, :uuid, :price, :executed_at
 
-      # Public: Initialize an execution for two orders.
+      # Initialize a new +Execution+ for two orders.
+      #
+      # @param order1 [Order]
+      # @param order2 [Order]
+      # @param amount [Numeric] amount to execute
+      # @param uuid [String] execution identifier
       def initialize(order1, order2, amount, uuid = Util.uuid)
         buy_order, sell_order = order1.buy? ? [order1, order2] : [order2, order1]
 
@@ -14,13 +19,18 @@ module Xtr
         @uuid = uuid
       end
 
-      # Public: Compute execution price.
+      # Compute execution price.
+      #
+      # @return [Numeric]
       def computed_price
         # Use the price of the order that was submitted earlier than the other.
         [buy_order, sell_order].sort_by(&:created_at).first.price
       end
 
-      # Public: Transfer amounts between buyer/seller accounts.
+      # Transfer amounts between buyer/seller accounts.
+      #
+      # @param left_amount [Numeric]
+      # @param right_amount [Numeric]
       def transfer(left_amount, right_amount)
         buy_order.debit(right_amount)
         sell_order.credit(right_amount)
@@ -28,7 +38,7 @@ module Xtr
         buy_order.credit(left_amount)
       end
 
-      # Public: Exectute.
+      # Exectute.
       def execute
         price = computed_price
 

@@ -1,11 +1,11 @@
 module Xtr
-  # Public: An operation for engine.
+  # An operation for engine.
   class OperationInterface
     include Operationable
 
-    # Public: Initialize an operation interface.
+    # Initialize a new +OperationInterface+.
     #
-    # engine - The Engine instance.
+    # @param engine [Engine]
     def initialize(engine)
       @engine = engine
     end

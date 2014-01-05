@@ -1,11 +1,11 @@
 module Xtr
-  # Public: A query interface for engine.
+  # A query interface for engine.
   class QueryInterface
     include Queryable
 
-    # Public: Initialize a query interface.
+    # Intiialize a +QueryInterface+.
     #
-    # engine - The Engine instance.
+    # @param engine [Engine]
     def initialize(engine)
       @engine = engine
     end
