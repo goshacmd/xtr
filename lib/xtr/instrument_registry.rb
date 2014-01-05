@@ -43,9 +43,9 @@ module Xtr
 
     # Public: Get a simple hash of instrument name -> instrument.
     def name_instrument
-      @name_instrument ||= Hash[*list.values.flatten.map do |instrument|
+      @name_instrument ||= list.values.flatten.map do |instrument|
         [instrument.name, instrument]
-      end.flatten]
+      end.to_h
     end
 
     # Public: Get an array of instrument names.
