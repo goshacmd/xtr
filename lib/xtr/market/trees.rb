@@ -59,7 +59,7 @@ module Xtr
           delete_best while best_limit && best_limit.size == 0
         end
 
-        private
+        protected
 
         def __getobj__
           @tree
