@@ -13,7 +13,7 @@ module Xtr
       @hash = Hash.new do |hash, key|
         if engine.supported_instrument?(key)
           instrument = engine.instrument_registry[key]
-          hash[key] = Balance.new(account, instrument)
+          hash[key] = CashBalance.new(account, instrument)
         else
           raise UnsupportedInstrumentError, "#{key} is not a supported instrument"
         end

@@ -1,15 +1,15 @@
 module Xtr
-  # Public: An instrument balance of an account.
+  # Public: A cash balance of an account.
   #
   # Examples
   #
-  #   cb = Balance.new acc, USD
+  #   cb = CashBalance.new acc, USD
   #   cb.credit(10_000.00)
   #   cb.available # => 10_000.00
   #
   #   cb.debit(2_500.00)
   #   cb.available # => 7_500.00
-  class Balance
+  class CashBalance
     attr_reader :account, :instrument, :available, :reserved,
       :reservations, :old_reservations
 
@@ -108,6 +108,7 @@ module Xtr
     def as_json
       {
         instrument: instrument.name,
+        type: :cash,
         available: Util.number_to_string(available),
         reserved: Util.number_to_string(reserved)
       }

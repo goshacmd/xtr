@@ -3,8 +3,8 @@ module Xtr
   #
   # Examples
   #
-  #   acc = Account.new
-  #   acc.credit(engine, :USD, 100.00)
+  #   acc = Account.new(engine)
+  #   acc.credit(:USD, 100.00)
   #   acc.balance(:USD) # => #<Balance account=123 instrument=USD available=100.00 reserved=0.00>
   class Account
     attr_reader :engine, :open_orders, :uuid

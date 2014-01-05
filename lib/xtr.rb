@@ -13,9 +13,9 @@ module Xtr
   extend ActiveSupport::Autoload
 
   autoload :Account
-  autoload :Balance
   autoload :BalanceCollection
   autoload :BalanceSheet
+  autoload :CashBalance
   autoload :Engine
   autoload :InstrumentRegistry
   autoload :Instruments

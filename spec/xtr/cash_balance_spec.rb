@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Xtr::Balance do
+describe Xtr::CashBalance do
   let(:account) { double('account', uuid: '123') }
   let(:instrument) { double('instrument') }
 
