@@ -43,5 +43,9 @@ module Xtr
     def new_account
       account.uuid
     end
+
+    def inspect
+      "#<#{self.class.name}>"
+    end
   end
 end
