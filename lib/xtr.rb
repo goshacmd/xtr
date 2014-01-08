@@ -18,8 +18,10 @@ module Xtr
   autoload :CashBalance
   autoload :Engine
   autoload :InstrumentRegistry
+  autoload :Journal
   autoload :Instrument
   autoload :Market
+  autoload :Operation
   autoload :OperationInterface
   autoload :Operationable
   autoload :QueryInterface

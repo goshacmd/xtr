@@ -8,6 +8,7 @@ module Xtr
     # @param engine [Engine]
     def initialize(engine)
       @engine = engine
+      @journal = journal
     end
 
     def context
