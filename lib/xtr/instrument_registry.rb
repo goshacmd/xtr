@@ -22,12 +22,8 @@ module Xtr
       #
       # @return [Array<Instrument>]
       def build_instrument_sublist(category, names)
-        case category
-        when :currency
-          names.map { |name| Instrument::Currency.new(name) }
-        when :stock
-          names.map { |name| Instrument::Stock.new(name) }
-        end
+        instrument = Instrument.for_type(category)
+        names.map { |name| instrument.new(name) }
       end
     end
 
