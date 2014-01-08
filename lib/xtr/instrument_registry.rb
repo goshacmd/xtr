@@ -7,7 +7,7 @@ module Xtr
       #
       # @param list [Hash{Symbol => Array<Symbol>}]
       #
-      # @return [Hash{Symbol => Array<Instruments::Instrument>}]
+      # @return [Hash{Symbol => Array<Instrument>}]
       def build_instruments(list)
         list.map do |category, sublist|
           [category, build_instrument_sublist(category, sublist)]
@@ -20,13 +20,13 @@ module Xtr
       # @param category [Symbol] category name (+:currency+ or +:stock+)
       # @param names [Array<Symbol>] list of instrument names
       #
-      # @return [Array<Instruments::Instrument>]
+      # @return [Array<Instrument>]
       def build_instrument_sublist(category, names)
         case category
         when :currency
-          names.map { |name| Instruments::CurrencyInstrument.new(name) }
+          names.map { |name| Instrument::Currency.new(name) }
         when :stock
-          names.map { |name| Instruments::StockInstrument.new(name) }
+          names.map { |name| Instrument::Stock.new(name) }
         end
       end
     end
@@ -50,7 +50,7 @@ module Xtr
 
     # Get a simple hash of instrument name -> instrument.
     #
-    # @return [Hash{String => Instruments::Instrument}]
+    # @return [Hash{String => Instrument}]
     def name_instrument
       @name_instrument ||= list.values.flatten.map do |instrument|
         [instrument.name, instrument]
@@ -66,7 +66,7 @@ module Xtr
 
     # Get an array of instrument instances.
     #
-    # @return [Array<Instruments::Instrument>]
+    # @return [Array<Instrument>]
     def instruments
       name_instrument.values
     end

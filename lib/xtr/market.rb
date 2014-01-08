@@ -23,8 +23,8 @@ module Xtr
     # Initialize a new +Market+.
     #
     # @param type [Symbol] market type (+:currency+ or +:stock+)
-    # @param left [Instruments::Instrument] left instrument
-    # @param right [Instruments::Instrument] right instrument
+    # @param left [Instrument] left instrument
+    # @param right [Instrument] right instrument
     def initialize(type, left, right)
       @type = type
       @left, @right = left, right

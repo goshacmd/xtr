@@ -13,7 +13,7 @@ module Xtr
 
     # Build markets for instruments.
     #
-    # @param instruments [Hash{Symbol => Array<Instruments::Instrument>}]
+    # @param instruments [Hash{Symbol => Array<Instrument>}]
     def build_markets(instruments)
       @markets = instruments.map do |(category, list)|
         case category

@@ -1,12 +1,12 @@
 module Xtr
-  module Instruments
+  class Instrument
     # Currency instrument.
-    class CurrencyInstrument < CashInstrument
+    class Currency < CashInstrument
       quantity :decimal
 
       attr_reader :symbol
 
-      # Initialize a new +CurrencyInstrument+.
+      # Initialize a new +Currency+ instrument.
       #
       # @param symbol [String, Symbol] currency code
       def initialize(symbol)

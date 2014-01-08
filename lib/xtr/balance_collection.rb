@@ -26,7 +26,7 @@ module Xtr
     #
     # @return [CashBalance]
     def [](instrument)
-      instrument = instrument.name if Instruments::Instrument === instrument
+      instrument = instrument.name if Instrument === instrument
       @hash[instrument.to_s]
     end
 
