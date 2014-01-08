@@ -4,7 +4,7 @@ require 'bigdecimal'
 module Xtr
   module Util
     # Generate an UUID.
-    def self.uuid
+    def uuid
       SecureRandom.uuid
     end
 
@@ -13,7 +13,7 @@ module Xtr
     # @param number [BigDecimal, Float, Integer]
     #
     # @return [BigDecimal]
-    def self.big_decimal(number)
+    def big_decimal(number)
       if BigDecimal === number
         number
       elsif Float === number
@@ -24,7 +24,7 @@ module Xtr
     end
 
     # @return [BigDecimal]
-    def self.zero
+    def zero
       self.big_decimal(0)
     end
 
@@ -33,12 +33,14 @@ module Xtr
     # @param number [BigDecimal, Integer]
     #
     # @return [String]
-    def self.number_to_string(number)
+    def number_to_string(number)
       if BigDecimal === number
         number.to_s('F')
       else
         number.to_s
       end
     end
+
+    extend self
   end
 end
