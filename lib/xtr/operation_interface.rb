@@ -3,10 +3,12 @@ module Xtr
   class OperationInterface
     include Operationable
 
+    attr_reader :journal
+
     # Initialize a new +OperationInterface+.
     #
     # @param engine [Engine]
-    def initialize(engine)
+    def initialize(engine, journal)
       @engine = engine
       @journal = journal
     end
@@ -34,12 +36,12 @@ module Xtr
     end
 
     # Operation: Create a buy order.
-    op :BUY do |account_id, market_name, price, quantity|
+    op :BUY, log: false do |account_id, market_name, price, quantity|
       execute(:CREATE_LMT, account_id, :buy, market_name, price, quantity)
     end
 
     # Operation: Create a sell order.
-    op :SELL do |account_id, market_name, price, quantity|
+    op :SELL, log: false do |account_id, market_name, price, quantity|
       execute(:CREATE_LMT, account_id, :sell, market_name, price, quantity)
     end
 

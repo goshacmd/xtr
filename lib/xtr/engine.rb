@@ -8,7 +8,7 @@ module Xtr
     include Operationable
 
     attr_reader :supermarket, :balance_sheet, :instruments,
-      :instrument_registry, :operation_interface, :query_interface
+      :instrument_registry, :operation_interface, :query_interface, :journal
 
     delegate :account, to: :balance_sheet
     delegate :market, :markets, to: :supermarket
@@ -24,7 +24,8 @@ module Xtr
       @supermarket = Supermarket.new(self)
       @balance_sheet = BalanceSheet.new(self)
       @instrument_registry = InstrumentRegistry.new(instruments)
-      @operation_interface = OperationInterface.new(self)
+      @journal = Journal::Dummy.new
+      @operation_interface = OperationInterface.new(self, @journal)
       @query_interface = QueryInterface.new(self)
 
       supermarket.build_markets(instrument_registry.list)

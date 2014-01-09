@@ -12,6 +12,12 @@ module Xtr
       raise NotImplementedError
     end
 
+    # Dummy journal. Does nothing.
+    class Dummy < Journal
+      def record(op)
+      end
+    end
+
     # File-based journal implementation.
     class File < Journal
       attr_reader :file
@@ -20,7 +26,7 @@ module Xtr
       #
       # @param filename [String] file name
       def initialize(filename)
-        @file = ::File.new(filename, 'r+')
+        @file = ::File.new(filename, 'a+')
       end
 
       def record(op)

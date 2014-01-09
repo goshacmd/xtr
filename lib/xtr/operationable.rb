@@ -15,14 +15,22 @@ module Xtr
   module Operationable
     extend ActiveSupport::Concern
 
+    # Return previous serial number and increment it.
+    def inc_serial
+      @serial ||= 0
+      serial, @serial = @serial, @serial + 1
+      serial
+    end
+
     # Execute an operation with name +op_name+ and pass
     # other arguments to the operation block.
     #
     # @param op_name [Symbol] operation name
     def execute(op_name, *args)
-      block = self.class.op(op_name)
+      block, log = self.class.op(op_name)
 
       if block
+        journal.record(Operation.new(inc_serial, op_name, args)) if log
         context.instance_exec(*args, &block)
       else
         raise NoSuchOperationError, "No operation named #{op_name} was registered"
@@ -33,9 +41,9 @@ module Xtr
       # Get/set operation block.
       #
       # @return [Proc]
-      def op(name, &block)
+      def op(name, log: true, &block)
         @ops ||= {}
-        @ops[name] = block if block_given?
+        @ops[name] = [block, log] if block_given?
         @ops[name]
       end
     end
