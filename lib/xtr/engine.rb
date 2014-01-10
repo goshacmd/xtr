@@ -77,6 +77,11 @@ module Xtr
       supermarket.build_markets(instrument_registry.list)
     end
 
+    # Replay operations from journal.
+    def replay
+      journal.replay(operation_interface)
+    end
+
     # Check whether an instrument is supported.
     #
     # @param name [String]

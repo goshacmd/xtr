@@ -37,6 +37,15 @@ module Xtr
       end
     end
 
+    # Execute an operation from journal.
+    #
+    # @param op [Operation]
+    def execute_op(op)
+      block, _ = self.class.op(op.name)
+
+      context.instance_exec(*op.args, &block)
+    end
+
     module ClassMethods
       # Get/set operation block.
       #

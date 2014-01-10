@@ -23,9 +23,20 @@ module Xtr
       raise NotImplementedError
     end
 
+    # Replay journal operations.
+    #
+    # @param op_interface [#execute_op] operation interface used to
+    # execute journaled operations
+    def replay(op_interface)
+      raise NotImplementedError
+    end
+
     # Dummy journal. Does nothing.
     class Dummy < Journal
       def record(op)
+      end
+
+      def replay(op_interface)
       end
     end
 
@@ -43,7 +54,15 @@ module Xtr
       end
 
       def record(op)
-        file.puts Marshal.dump(op)
+        file.puts Marshal.dump(op), "\n"
+      end
+
+      def replay(op_interface)
+        file.each_line("\n\n") do |line|
+          op = Marshal.load(line)
+          Xtr.logger.debug "replaying #{op}"
+          op_interface.execute_op(op)
+        end
       end
     end
   end

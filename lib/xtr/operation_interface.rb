@@ -28,21 +28,21 @@ module Xtr
     end
 
     # Operation: Create a LIMIT order.
-    op :CREATE_LMT do |account_id, direction, market_name, price, quantity|
+    op :CREATE_LMT do |account_id, direction, market_name, price, quantity, uuid|
       account = account(account_id)
       market = market(market_name)
-      order = supermarket.create_order account, market, direction, price, quantity
+      order = supermarket.create_order account, market, direction, price, quantity, uuid
       order.uuid
     end
 
     # Operation: Create a buy order.
     op :BUY, log: false do |account_id, market_name, price, quantity|
-      execute(:CREATE_LMT, account_id, :buy, market_name, price, quantity)
+      execute(:CREATE_LMT, account_id, :buy, market_name, price, quantity, Util.uuid)
     end
 
     # Operation: Create a sell order.
     op :SELL, log: false do |account_id, market_name, price, quantity|
-      execute(:CREATE_LMT, account_id, :sell, market_name, price, quantity)
+      execute(:CREATE_LMT, account_id, :sell, market_name, price, quantity, Util.uuid)
     end
 
     # Operation: Cancel an order.

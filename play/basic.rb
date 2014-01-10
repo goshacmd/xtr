@@ -1,4 +1,5 @@
 require 'xtr'
+load 'play/_common.rb'
 
 Xtr.logger = Logger.new STDOUT
 
@@ -19,41 +20,6 @@ engine.execute :DEPOSIT, a2, "BTC", 120.00
 
 # depositing stocks? wtf
 engine.execute :DEPOSIT, a1, "AAPL", 100
-
-def ob(m)
-  o = m.orderbook
-
-  buf = []
-  buf << ""
-  buf << "Orderbook:"
-  buf << "---"
-  o.asks.reverse_each { |_, a| buf << a }
-  buf << "---"
-  o.bids.reverse_each { |_, a| buf << a }
-  buf << "---\n"
-
-  puts buf.join "\n"
-end
-
-def b(bs)
-  buf = []
-  buf << ""
-  buf << "Balance sheet:"
-  buf << "---"
-
-  bs.accounts.each do |_, a|
-    buf << a
-  end
-
-  buf << "---"
-
-  all = bs.count_all.map { |k, v| "#{k}: #{v.to_f}" }
-  buf << "Total: #{all.join(', ')}"
-
-  buf << "---\n"
-
-  puts buf.join "\n"
-end
 
 ob m
 b bs
@@ -77,11 +43,7 @@ engine.execute :BUY, a2, "USD:AAPL", 750, 10
 ob m
 b bs
 
-[a1, a2].each do |account|
-  engine.query(:OPEN_ORDERS, account).each do |order|
-    engine.execute :CANCEL, account, order[:id]
-  end
-end
+engine.execute :CANCEL, a1, engine.query(:OPEN_ORDERS, a1).first[:id]
 
 ob m
 b bs

@@ -1,4 +1,5 @@
 require 'xtr'
+load 'play/_common.rb'
 
 #Xtr.logger = Logger.new STDOUT
 
@@ -15,36 +16,6 @@ accounts.each do |account|
   engine.execute :DEPOSIT, account, "BTC", rand(0..1_000)
   engine.execute :DEPOSIT, account, "USD", rand(0..1_000_000) * rand(0..3)
 end
-
-def ob(m)
-  o = m.orderbook
-
-  buf = []
-  buf << ""
-  buf << "Orderbook:"
-  buf << "---"
-  o.asks.reverse_each { |_, a| buf << a }
-  buf << "---"
-  o.bids.reverse_each { |_, a| buf << a }
-  buf << "---\n"
-
-  puts buf.join "\n"
-end
-
-def b(bs)
-  buf = []
-  buf << ""
-  buf << "---"
-
-  all = bs.count_all.map { |k, v| "#{k}: #{v.to_f}" }
-  buf << "Total: #{all.join(', ')}"
-
-  buf << "---\n"
-
-  puts buf.join "\n"
-end
-
-b bs
 
 100_000.times do |i|
   account = accounts.sample
@@ -71,5 +42,5 @@ b bs
   end
 end
 
-b bs
+s bs
 ob m
