@@ -55,6 +55,32 @@ module Xtr
         @instruments ||= {}
         @instruments[:stock] = list
       end
+
+      # Set markets.
+      #
+      # @param desc [Hash{Symbol => Proc}]
+      #
+      # @see Supermarket.build_markets
+      def markets(desc = nil)
+        @markets ||= {
+          currency: ->(list, _) { list.combination(2) },
+          stock: ->(list, inst) { list.product(inst[:currency]) }
+        }
+        @markets = desc if desc
+        @markets
+      end
+
+      # Set currency market generator proc.
+      def currency_markets(&block)
+        markets
+        @markets[:currency] = block
+      end
+
+      # Set stock market generator proc.
+      def stock_markets(&block)
+        markets
+        @markets[:stock] = block
+      end
     end
 
     # Initialize a new +Engine+.
@@ -74,7 +100,7 @@ module Xtr
       @operation_interface = OperationInterface.new(self, @journal)
       @query_interface = QueryInterface.new(self)
 
-      supermarket.build_markets(instrument_registry.list)
+      supermarket.build_markets(instrument_registry, config.markets)
     end
 
     # Replay operations from journal.

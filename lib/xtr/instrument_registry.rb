@@ -67,6 +67,13 @@ module Xtr
       name_instrument.values
     end
 
+    # Get instrument by name.
+    #
+    # @return [Instrument]
+    def [](name)
+      Instrument === name ? name : name_instrument[name.to_s]
+    end
+
     # Check whether an instrument is supported.
     #
     # @param name [String]

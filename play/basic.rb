@@ -1,11 +1,18 @@
 require 'xtr'
 load 'play/_common.rb'
 
+FileUtils.rm('tmp/demo.journal')
+
 Xtr.logger = Logger.new STDOUT
 
 engine = Xtr::Engine.new do |c|
   c.currency :BTC, :USD
   c.stock :AAPL, :GOOG, :V
+
+  c.stock_markets do |list, _|
+    list.product([:USD])
+  end
+
   c.journal :file, "tmp/demo.journal"
 end
 

@@ -13,18 +13,20 @@ module Xtr
 
     # Build markets for instruments.
     #
-    # @param instruments [Hash{Symbol => Array<Instrument>}]
-    def build_markets(instruments)
-      @markets = instruments.map do |(category, list)|
-        case category
-        when :currency
-          list.combination(2).map do |left, right|
-            Market.new(:currency, left, right)
-          end
-        when :stock
-          list.product(instruments[:currency]).map do |stock, currency|
-            Market.new(:stock, stock, currency)
-          end
+    # Generators are procs which take list of instruments of given category
+    # and a hash of all instruments. Generators should return an array of
+    # +[left_instrument, right_instrument]+ pairs.
+    #
+    # @param instruments [InstrumentRegistry]
+    # @param generators [Hash{Symbol => Proc}]
+    def build_markets(instruments, generators)
+      inst = instruments.list
+      @markets = instruments.list.map do |(category, list)|
+        generator = generators[category]
+        generator.call(list, inst).map do |left, right|
+          left = instruments[left]
+          right = instruments[right]
+          Market.new(category, left, right)
         end
       end.flatten.map { |m| [m.pair, m] }.to_h
     end
