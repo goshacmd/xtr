@@ -30,7 +30,7 @@ module Xtr
       block, log = self.class.op(op_name)
 
       if block
-        journal.record(Operation.new(inc_serial, op_name, args)) if log
+        journal.record(Operation.new(inc_serial, Time.now, op_name, args)) if log
         context.instance_exec(*args, &block)
       else
         raise NoSuchOperationError, "No operation named #{op_name} was registered"
