@@ -3,7 +3,9 @@ module Xtr
   # a balance sheet.
   #
   # @example
-  #   engine = Engine.new({ currency: [:BTC, :USD] })
+  #   engine = Engine.new do |c|
+  #     c.currency :BTC, :USD
+  #   end
   class Engine
     include Operationable
 
@@ -15,16 +17,60 @@ module Xtr
     delegate :execute, to: :operation_interface
     delegate :query, to: :query_interface
 
+    # Engine configuration.
+    class Config
+      # Set journal.
+      #
+      # @param args [Array] journal description.
+      # First item is journal type, the rest is just passed to journal initializer
+      def journal(*args)
+        @journal ||= [:dummy]
+        @journal = args unless args.empty?
+        @journal
+      end
+
+      # Set instruments.
+      #
+      # @param desc [Hash{Symbol => Array<Symbol>}] instruments map
+      #
+      # @see InstrumentRegistry.build_instruments
+      def instruments(desc = nil)
+        @instruments ||= {}
+        @instruments = desc if desc
+        @instruments
+      end
+
+      # Set currency instruments.
+      #
+      # @param list [Array<Symbol>] list of currency instrument names
+      def currency(*list)
+        @instruments ||= {}
+        @instruments[:currency] = list
+      end
+
+      # Set stock instruments.
+      #
+      # @param list [Array<Symbol>] list of stock instrument names
+      def stock(*list)
+        @instruments ||= {}
+        @instruments[:stock] = list
+      end
+    end
+
     # Initialize a new +Engine+.
     #
-    # @param instruments [Hash{Symbol => Array<Symbol>}] instruments map
+    # @yieldparam [Config] config engine configuration
     #
     # @see InstrumentRegistry.build_instruments
-    def initialize(instruments)
+    def initialize
       @supermarket = Supermarket.new(self)
       @balance_sheet = BalanceSheet.new(self)
-      @instrument_registry = InstrumentRegistry.new(instruments)
-      @journal = Journal::Dummy.new
+
+      config = Config.new
+      yield config if block_given?
+
+      @instrument_registry = InstrumentRegistry.new(config.instruments)
+      @journal = Journal.build(*config.journal)
       @operation_interface = OperationInterface.new(self, @journal)
       @query_interface = QueryInterface.new(self)
 

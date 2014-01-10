@@ -3,6 +3,17 @@ module Xtr
   #
   # @abstract
   class Journal
+    class << self
+      # Build a journal instance.
+      #
+      # @param type [String, Symbol] journal type
+      # @param args [Array] journal initializer arguments
+      def build(type, *args)
+        klass = const_get(type.to_s.capitalize)
+        args.empty? ? klass.new : klass.new(*args)
+      end
+    end
+
     # Record a user operation.
     #
     # @abstract

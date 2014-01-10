@@ -2,10 +2,11 @@ require 'xtr'
 
 Xtr.logger = Logger.new STDOUT
 
-engine = Xtr::Engine.new({
-  currency: [:BTC, :USD],
-  stock: [:AAPL, :GOOG, :V]
-})
+engine = Xtr::Engine.new do |c|
+  c.currency :BTC, :USD
+  c.stock :AAPL, :GOOG, :V
+  c.journal :file, "tmp/demo.journal"
+end
 
 m = engine.market("BTC/USD")
 bs = engine.balance_sheet

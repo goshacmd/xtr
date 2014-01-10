@@ -36,15 +36,15 @@ Each balance has available and reserved amounts.
 
 ## Getting started
 
-To get started, you would need to instantiate an engine and pass it the list of
+To get started, you would need to instantiate an engine and specify
 instruments you want it to support. Instruments are broken down by
 category. At the moment, xtr supports currency and stock instruments.
 
 ```ruby
-engine = Xtr::Engine.new({
-  currency: [:BTC, :USD, :EUR],
-  stock: [:AAPL, :GOOG, :TWTR, :V]
-})
+engine = Xtr::Engine.new do |c|
+  c.currency :BTC, :USD, :EUR
+  c.stock :AAPL, :GOOG, :TWTR, :V
+end
 ```
 
 Engine will then create *markets* for described instruments. By default,
