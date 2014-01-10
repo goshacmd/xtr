@@ -37,7 +37,9 @@ module Xtr
       #
       # @param filename [String] file name
       def initialize(filename)
-        @file = ::File.new(filename, 'a+')
+        dir = ::File.dirname filename
+        FileUtils.mkdir_p dir
+        @file = ::File.new filename, 'a+'
       end
 
       def record(op)
