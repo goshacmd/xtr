@@ -29,42 +29,34 @@ module Xtr
         @created_at = Time.now
       end
 
-      # Check if order direction is +:buy+.
       def buy?
         direction == :buy
       end
 
-      # Check if order direction is +:sell+.
       def sell?
         direction == :sell
       end
 
-      # Check if order is new.
       def new?
         status == :new
       end
 
-      # Check if order is filled.
       def filled?
         status == :filled
       end
 
-      # Check if order is paertially filled.
       def partially_filled?
         status == :partially_filled
       end
 
-      # Check if order is rejected.
       def rejected?
         status == :rejected
       end
 
-      # Check if order is canceled.
       def canceled?
         status == :canceled
       end
 
-      # Check if the order isn't filled.
       def unfilled?
         new? || partially_filled?
       end
@@ -73,15 +65,14 @@ module Xtr
       #
       # @param price [BigDecimal]
       # @param quantity [Numeric]
-      #
       # @return [Numeric]
       def offered_amount(price = price, quantity = quantity)
         buy? ? price * quantity : quantity
       end
 
-      # Get the offered instrument symbol.
+      # Get the offered instrument name.
       #
-      # @return [Symbol]
+      # @return [Strinf]
       def offered
         buy? ? market.right.name : market.left.name
       end
@@ -90,42 +81,54 @@ module Xtr
       #
       # @param price [BigDecimal]
       # @param quantity [Numeroc]
-      #
       # @return [Numeric]
       def received_amount(price = price, quantity = quantity)
         sell? ? price * quantity : quantity
       end
 
-      # Get the received instrument symbol.
+      # Get the received instrument name.
       #
-      # @return [Symbol]
+      # @return [String]
       def received
         sell? ? market.right.name : market.left.name
       end
 
       # Reserve the order amount.
+      #
+      # @return [void]
       def reserve
         @reserve_id = account.reserve(offered, offered_amount)
         account.open_orders << self
       end
 
       # Release the order amount.
+      #
+      # @param amount [BigDecimal]
+      # @return [void]
       def release(amount = nil)
         @reserve_id = account.release(offered, reserve_id, amount) if reserve_id
       end
 
       # Debit the reserved order amount.
+      #
+      # @param amount [BigDecimal]
+      # @return [void]
       def debit(amount = nil)
         @reserve_id = account.debit_reserved(offered, reserve_id, amount) if reserve_id
       end
 
       # Credit received amount in received instrument.
+      #
+      # @param amount [BigDecimal]
+      # @return [void]
       def credit(amount = received_amount)
         account.credit(received, amount)
       end
 
       # Release order amount and remove from account's open orders if it
       # is filled or canceled.
+      #
+      # @return [void]
       def release_delete
         if filled? || canceled?
           release
@@ -137,6 +140,7 @@ module Xtr
       #
       # @param amount [BigDecimal]
       # @param price [BigDecimal]
+      # @return [void]
       def add_fill(amount, price)
         @fills << [price, amount]
         @remainder -= amount
@@ -147,6 +151,8 @@ module Xtr
       end
 
       # Cancel the order.
+      #
+      # @return [void]
       def cancel!
         @status = :canceled
         @canceled_at = Time.now

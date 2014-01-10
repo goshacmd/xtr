@@ -17,12 +17,10 @@ module Xtr
         @filled_orders = []
       end
 
-      # @return [Boolean]
       def buy?
         direction == :buy
       end
 
-      # @return [Boolean]
       def sell?
         direction == :sell
       end
@@ -30,6 +28,7 @@ module Xtr
       # Add an order to the limit.
       #
       # @param order [Order]
+      # @return [void]
       def add(order)
         @orders << order
         @size += order.remainder
@@ -38,12 +37,14 @@ module Xtr
       # Remove an order.
       #
       # @param order [Order]
+      # @return [void]
       def remove(order)
         @size -= order.remainder if orders.delete(order)
       end
 
       # Get array of orders that can fill +amount+.
       #
+      # @param amount [BigDecimal]
       # @return [Array<Array>] +[order, fill]+ pairs
       def orders_to_fill(amount)
         remaining = amount
@@ -64,6 +65,7 @@ module Xtr
       #
       # @param amount [BigDecimal]
       # @param other_order [Order]
+      # @return [void]
       def fill(amount, other_order)
         amount = Util.big_decimal(amount)
 

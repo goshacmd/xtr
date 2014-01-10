@@ -23,7 +23,6 @@ module Xtr
     # Get a balance for instrument.
     #
     # @param instrument [String, Symbol, Instrument] instrument code
-    #
     # @return [CashBalance]
     def [](instrument)
       instrument = instrument.name if Instrument === instrument
@@ -31,6 +30,8 @@ module Xtr
     end
 
     # Get an array of balances, sorted by instrument name.
+    #
+    # @return [Array]
     def to_a
       @hash.values.sort_by { |b| b.instrument.name }
     end

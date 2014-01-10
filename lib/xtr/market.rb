@@ -15,9 +15,15 @@ module Xtr
 
     attr_reader :type, :left, :right, :orderbook
 
+    # @!method add_order
+    #   @see Orderbook#add_order
+    # @!method cancel_order
+    #   @see Orderbook#cancel_order
     delegate :bids, :asks, :best_bid, :best_ask, :last_price,
       :add_order, :cancel_order, to: :orderbook
 
+    # @!method convert_quantity
+    # @see Instrument#convert_quantity
     delegate :convert_quantity, to: :left
 
     # Initialize a new +Market+.

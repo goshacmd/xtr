@@ -3,6 +3,8 @@ module Xtr
   class Reservation
     attr_reader :balance, :amount, :uuid, :released, :debited
 
+    # @!method convert_quantity
+    # @see CashBalance#convert_quantity
     delegate :convert_quantity, to: :balance
 
     # Initialize a new +Reservation+.
@@ -19,6 +21,8 @@ module Xtr
     end
 
     # Get a reservation remainder.
+    #
+    # @return [Numeric]
     def remainder
       amount - released - debited
     end
@@ -31,6 +35,7 @@ module Xtr
     # Release an amount from the reservation.
     #
     # @param amount [Numeric]
+    # @return [void]
     def release(amount = remainder)
       amount = convert_quantity(amount)
       @released += amount if ensure_can_use(amount)
@@ -39,6 +44,7 @@ module Xtr
     # Release an amount from the reservation.
     #
     # @param amount [Numeric]
+    # @return [void]
     def debit(amount = remainder)
       amount = convert_quantity(amount)
       @debited += amount if ensure_can_use(amount)

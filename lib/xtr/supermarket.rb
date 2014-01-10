@@ -19,6 +19,7 @@ module Xtr
     #
     # @param instruments [InstrumentRegistry]
     # @param generators [Hash{Symbol => Proc}]
+    # @return [Hash{String => Market}]
     def build_markets(instruments, generators)
       inst = instruments.list
       @markets = instruments.list.map do |(category, list)|
@@ -34,7 +35,6 @@ module Xtr
     # Get a market for the instrument pair.
     #
     # @param name [String]
-    #
     # @return [Market]
     def market(name)
       @markets[name]
@@ -44,6 +44,7 @@ module Xtr
     # Route an order to the appropriate market.
     #
     # @param order [Market::Order]
+    # @return [void]
     def route_order(order)
       order.market.add_order(order)
     end
@@ -60,6 +61,7 @@ module Xtr
     # Cancel an order.
     #
     # @param order [Market::Order]
+    # @return [void]
     def cancel_order(order)
       order.market.cancel_order(order)
     end

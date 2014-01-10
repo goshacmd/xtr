@@ -4,6 +4,8 @@ require 'bigdecimal'
 module Xtr
   module Util
     # Generate an UUID.
+    #
+    # @return [String]
     def uuid
       SecureRandom.uuid
     end
@@ -11,7 +13,6 @@ module Xtr
     # Convert +number+ to a +BigDecimal+.
     #
     # @param number [BigDecimal, Float, Integer]
-    #
     # @return [BigDecimal]
     def big_decimal(number)
       if BigDecimal === number
@@ -31,7 +32,6 @@ module Xtr
     # Convert a number to a string.
     #
     # @param number [BigDecimal, Integer]
-    #
     # @return [String]
     def number_to_string(number)
       if BigDecimal === number

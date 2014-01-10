@@ -15,16 +15,12 @@ module Xtr
 
         # Get the best price.
         #
-        # @abstract
-        #
         # @return [BigDecimal]
         def best_price
           raise NotImplementedError
         end
 
         # Get the limit at the best price.
-        #
-        # @abstract
         #
         # @return [Limit]
         def best_limit
@@ -33,28 +29,24 @@ module Xtr
 
         # Delete the best limit.
         #
-        # @abstract
+        # @return [void]
         def delete_best
           raise NotImplementedError
         end
 
-        # @abstract
-        #
         # @yield [Limit]
         def take_best_while
           raise NotImplementedError
         end
 
         # Check if an order with price +price+ can be filled from the tree.
-        #
-        # @abstract
-        #
-        # @return [Boolean]
         def can_fill_price?(price)
           raise NotImplementedError
         end
 
         # Delete blank limit records.
+        #
+        # @return [void]
         def cleanup
           delete_best while best_limit && best_limit.size == 0
         end
@@ -72,22 +64,27 @@ module Xtr
 
       # A bids tree.
       class Bids < Basic
+        # (see Basic#best_price)
         def best_price
           last && last[0]
         end
 
+        # (see Basic#best_limit)
         def best_limit
           last && last[1]
         end
 
+        # (see Basic#delete_best)
         def delete_best
           pop
         end
 
+        # (see Basic#take_best_while)
         def take_best_while(&block)
           reverse_each.take_while(&block)
         end
 
+        # (see Basic#can_fill_price?)
         def can_fill_price?(price)
           !!lower_bound(price)
         end
@@ -95,22 +92,27 @@ module Xtr
 
       # An asks tree.
       class Asks < Basic
+        # (see Basic#best_price)
         def best_price
           first && first[0]
         end
 
+        # (see Basic#best_limit)
         def best_limit
           first && first[1]
         end
 
+        # (see Basic#delete_best)
         def delete_best
           shift
         end
 
+        # (see Basic#take_best_while)
         def take_best_while(&block)
           take_while(&block)
         end
 
+        # (see Basic#can_fill_price?)
         def can_fill_price?(price)
           !!upper_bound(price)
         end

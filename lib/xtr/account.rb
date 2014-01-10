@@ -23,6 +23,7 @@ module Xtr
     # Get an account's balance in specific instrument.
     #
     # @param instrument [Symbol] instrument code
+    # @return [CashBalance]
     def balance(instrument)
       @balances[instrument]
     end
@@ -30,27 +31,29 @@ module Xtr
 
     # Delegate balance-related methods to balance for appropriate instrument.
     #
-    # @!method credit
+    # @macro account.delegate.balance
+    #
+    # @!method credit(instrument, amount)
     #   @see CashBalance#credit
     #   @example
     #     account.credit(USD, 100.00)
     #
-    # @!method debit
+    # @!method debit(instrument, amount)
     #   @see CashBalance#debit
     #   @example
     #     account.debit(USD, 100.00)
     #
-    # @!method reserve
+    # @!method reserve(instrument, amount)
     #   @see CashBalance#reserve
     #   @example
     #     account.resevre(USD, 50.00)
     #
-    # @!method release
+    # @!method release(instrument, reserve_id)
     #   @see CashBalance#release
     #   @example
     #     account.release(USD, 'reserve-id')
     #
-    # @!method debit_reserved
+    # @!method debit_reserved(instrument, reserve_id)
     #   @see CashBalance#debit_reserved
     #   @example
     #     account.debit_reserved(USD, 'reserve-id')

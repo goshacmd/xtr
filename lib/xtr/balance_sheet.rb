@@ -3,7 +3,7 @@ module Xtr
   class BalanceSheet
     attr_reader :engine, :accounts
 
-    # Initialize a balance sheet.
+    # Initialize a new +BalanceSheet+.
     #
     # @param engine [Engine]
     def initialize(engine)

@@ -8,11 +8,13 @@ module Xtr
     # Initialize a new +OperationInterface+.
     #
     # @param engine [Engine]
+    # @param journal [Journal]
     def initialize(engine, journal)
       @engine = engine
       @journal = journal
     end
 
+    # Operation context.
     def context
       @engine
     end

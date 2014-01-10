@@ -12,9 +12,17 @@ module Xtr
     attr_reader :supermarket, :balance_sheet, :instruments,
       :instrument_registry, :operation_interface, :query_interface, :journal
 
+    # @!method account
+    # @see BalanceSheet#account
     delegate :account, to: :balance_sheet
+    # @!method market
+    # @see Supermarket#market
     delegate :market, :markets, to: :supermarket
+    # @!method execute
+    # @see Operationable#execute
     delegate :execute, to: :operation_interface
+    # @!method query
+    # @see Queryable#query
     delegate :query, to: :query_interface
 
     # Engine configuration.
@@ -22,7 +30,8 @@ module Xtr
       # Set journal.
       #
       # @param args [Array] journal description.
-      # First item is journal type, the rest is just passed to journal initializer
+      #   First item is journal type, the rest is just passed to journal initializer
+      # @return [Array]
       def journal(*args)
         @journal ||= [:dummy]
         @journal = args unless args.empty?
@@ -32,8 +41,8 @@ module Xtr
       # Set instruments.
       #
       # @param desc [Hash{Symbol => Array<Symbol>}] instruments map
-      #
       # @see InstrumentRegistry.build_instruments
+      # @return [Hash{Symbol => Array<Symbol>}]
       def instruments(desc = nil)
         @instruments ||= {}
         @instruments = desc if desc
@@ -43,6 +52,7 @@ module Xtr
       # Set currency instruments.
       #
       # @param list [Array<Symbol>] list of currency instrument names
+      # @return [void]
       def currency(*list)
         @instruments ||= {}
         @instruments[:currency] = list
@@ -51,6 +61,7 @@ module Xtr
       # Set stock instruments.
       #
       # @param list [Array<Symbol>] list of stock instrument names
+      # @return [void]
       def stock(*list)
         @instruments ||= {}
         @instruments[:stock] = list
@@ -59,8 +70,8 @@ module Xtr
       # Set markets.
       #
       # @param desc [Hash{Symbol => Proc}]
-      #
       # @see Supermarket.build_markets
+      # @return [Hash{Symbol => Proc}]
       def markets(desc = nil)
         @markets ||= {
           currency: ->(list, _) { list.combination(2) },
@@ -71,12 +82,16 @@ module Xtr
       end
 
       # Set currency market generator proc.
+      #
+      # @return [void]
       def currency_markets(&block)
         markets
         @markets[:currency] = block
       end
 
       # Set stock market generator proc.
+      #
+      # @return [void]
       def stock_markets(&block)
         markets
         @markets[:stock] = block
@@ -86,7 +101,6 @@ module Xtr
     # Initialize a new +Engine+.
     #
     # @yieldparam [Config] config engine configuration
-    #
     # @see InstrumentRegistry.build_instruments
     def initialize
       @supermarket = Supermarket.new(self)
@@ -104,6 +118,8 @@ module Xtr
     end
 
     # Replay operations from journal.
+    #
+    # @return [void]
     def replay
       journal.replay(operation_interface)
     end

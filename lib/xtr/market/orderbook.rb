@@ -28,6 +28,7 @@ module Xtr
       # Add a new order.
       #
       # @param order [Order]
+      # @return [void]
       def add_order(order)
         price = order.price
         tree = tree_for_direction(order.direction)
@@ -46,6 +47,7 @@ module Xtr
       # Cancel an order.
       #
       # @param order [Order]
+      # @return [void]
       def cancel_order(order)
         return unless order.unfilled?
 
@@ -94,6 +96,7 @@ module Xtr
       # Get the best offer from the opposite tree.
       #
       # @param order [Order]
+      # @return [void]
       def fill_order(order)
         opposite = tree_opposite_direction(order.direction)
 

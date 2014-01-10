@@ -31,6 +31,7 @@ module Xtr
       #
       # @param left_amount [Numeric]
       # @param right_amount [Numeric]
+      # @return [void]
       def transfer(left_amount, right_amount)
         buy_order.debit(right_amount)
         sell_order.credit(right_amount)
@@ -38,7 +39,9 @@ module Xtr
         buy_order.credit(left_amount)
       end
 
-      # Exectute.
+      # Execute.
+      #
+      # @return [void]
       def execute
         price = computed_price
 

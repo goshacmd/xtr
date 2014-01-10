@@ -31,6 +31,7 @@ module Xtr
     # Credit funds to the balance.
     #
     # @param amount [String, Numeric] amount to credit
+    # @return [void]
     def credit(amount)
       amount = convert_quantity(amount)
 
@@ -40,8 +41,8 @@ module Xtr
     # Debit funds from the balance.
     #
     # @param amount [String, Numeric] amount to debit
-    #
     # @raise [NotEnoughFundsError] if there are not enough funds.
+    # @return [void]
     def debit(amount)
       amount = convert_quantity(amount)
 
@@ -51,9 +52,7 @@ module Xtr
     # Reserve a specific amount from the available amount.
     #
     # @param amount [String, Numeric] amount to reserve
-    #
     # @raise [NotEnoughFundsError] if there are not enough funds
-    #
     # @return [String] reservation identifier
     def reserve(amount)
       amount = convert_quantity(amount)
@@ -68,15 +67,12 @@ module Xtr
       end
     end
 
-
     # Release a specific amount from reserve to available balance.
     #
     # @param reserve_id [String] reservation identifier
     # @param amount [String, Numeric] amount to release
-    #
     # @raise [NoSuchReservationError] if there is no reservation with
-    # this identified
-    #
+    #   this identifier
     # @return [String, nil] reservation identifier if it's not emtpy
     def release(reserve_id, amount = nil)
       if ensure_reservation(reserve_id)
@@ -93,10 +89,8 @@ module Xtr
     #
     # @param reserve_id [String] reservation identifier
     # @param amount [String, Numeric] amount to release
-    #
     # @raise [NoSuchReservationError] if there is no reservation with
-    # this identified
-    #
+    #  this identifier
     # @return [String, nil] reservation identifier if it's not emtpy
     def debit_reserved(reserve_id, amount = nil)
       if ensure_reservation(reserve_id)

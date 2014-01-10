@@ -10,6 +10,7 @@ module Xtr
       @engine = engine
     end
 
+    # Query context.
     def context
       @engine
     end

@@ -6,7 +6,6 @@ module Xtr
       # of instrument instances.
       #
       # @param list [Hash{Symbol => Array<Symbol>}]
-      #
       # @return [Hash{Symbol => Array<Instrument>}]
       def build_instruments(list)
         list.map do |category, sublist|
@@ -19,7 +18,6 @@ module Xtr
       #
       # @param category [Symbol] category name (+:currency+ or +:stock+)
       # @param names [Array<Symbol>] list of instrument names
-      #
       # @return [Array<Instrument>]
       def build_instrument_sublist(category, names)
         instrument = Instrument.for_type(category)
@@ -36,10 +34,10 @@ module Xtr
     # @param list [Hash{Symbol => Array<Symbol>}] map of instruments.
     #
     # @example
-    #   ir = InstrumentRegistry.new {
+    #   ir = InstrumentRegistry.new({
     #     currency: [:USD, :EUR],
     #     stock: [:AAPL, :GOOG]
-    #   }
+    #   })
     def initialize(list)
       @list = self.class.build_instruments(list)
     end
@@ -77,8 +75,6 @@ module Xtr
     # Check whether an instrument is supported.
     #
     # @param name [String]
-    #
-    # @return [Boolean]
     def supported?(name)
       name_instrument.has_key?(name)
     end

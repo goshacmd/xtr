@@ -1,13 +1,14 @@
 module Xtr
   # A journal of user operations.
   #
-  # @abstract
+  # @abstract Subclass and override {#record} and {#replay}.
   class Journal
     class << self
       # Build a journal instance.
       #
       # @param type [String, Symbol] journal type
       # @param args [Array] journal initializer arguments
+      # @return [Journal]
       def build(type, *args)
         klass = const_get(type.to_s.capitalize)
         args.empty? ? klass.new : klass.new(*args)
@@ -16,9 +17,8 @@ module Xtr
 
     # Record a user operation.
     #
-    # @abstract
-    #
-    # @param op [Operation]
+    # @param op [Operation] operation to record
+    # @return [void]
     def record(op)
       raise NotImplementedError
     end
@@ -26,16 +26,19 @@ module Xtr
     # Replay journal operations.
     #
     # @param op_interface [#execute_op] operation interface used to
-    # execute journaled operations
+    #   execute journaled operations
+    # @return [void]
     def replay(op_interface)
       raise NotImplementedError
     end
 
     # Dummy journal. Does nothing.
     class Dummy < Journal
+      # (see Journal#record)
       def record(op)
       end
 
+      # (see Journal#replay)
       def replay(op_interface)
       end
     end
@@ -53,10 +56,12 @@ module Xtr
         @file = ::File.new filename, 'a+'
       end
 
+      # (see Journal#record)
       def record(op)
         file.puts Marshal.dump(op), "\n"
       end
 
+      # (see Journal#replay)
       def replay(op_interface)
         file.each_line("\n\n") do |line|
           op = Marshal.load(line)

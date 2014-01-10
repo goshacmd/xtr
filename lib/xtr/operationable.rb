@@ -25,6 +25,7 @@ module Xtr
     # other arguments to the operation block.
     #
     # @param op_name [Symbol] operation name
+    # @return [void]
     def execute(op_name, *args)
       op_name = op_name.to_sym
       block, log = self.class.op(op_name)
@@ -40,6 +41,7 @@ module Xtr
     # Execute an operation from journal.
     #
     # @param op [Operation]
+    # @return [void]
     def execute_op(op)
       block, _ = self.class.op(op.name)
 
