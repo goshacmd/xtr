@@ -18,8 +18,7 @@ module Xtr
     # Return previous serial number and increment it.
     def inc_serial
       @serial ||= 0
-      serial, @serial = @serial, @serial + 1
-      serial
+      @serial += 1
     end
 
     # Execute an operation with name +op_name+ and pass
@@ -27,6 +26,7 @@ module Xtr
     #
     # @param op_name [Symbol] operation name
     def execute(op_name, *args)
+      op_name = op_name.to_sym
       block, log = self.class.op(op_name)
 
       if block
@@ -43,6 +43,7 @@ module Xtr
     def execute_op(op)
       block, _ = self.class.op(op.name)
 
+      @serial = op.serial
       context.instance_exec(*op.args, &block)
     end
 
