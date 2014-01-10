@@ -32,6 +32,9 @@ module Xtr
   class << self
     attr_writer :logger
 
+    # Get a global logger.
+    #
+    # @return [Logger]
     def logger
       @logger ||= Logger.new '/dev/null'
     end
