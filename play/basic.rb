@@ -1,7 +1,7 @@
 require 'xtr'
 load 'play/_common.rb'
 
-FileUtils.rm('tmp/demo.journal')
+FileUtils.rm_rf('tmp/demo.journal')
 
 Xtr.logger = Logger.new STDOUT
 

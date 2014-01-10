@@ -1,8 +1,6 @@
 module Xtr
   # An operation for engine.
   class OperationInterface
-    include Operationable
-
     attr_reader :journal
 
     # Initialize a new +OperationInterface+.
@@ -12,46 +10,39 @@ module Xtr
     def initialize(engine, journal)
       @engine = engine
       @journal = journal
+      @serial = 0
     end
 
-    # Operation context.
-    def context
-      @engine
+    # Increment serial and return the new value.
+    #
+    # @return [Integer]
+    def inc_serial
+      @serial += 1
     end
 
-    # Operation: Deposit amount of instrument to account.
-    op :DEPOSIT do |account_id, instrument, amount|
-      account(account_id).credit(instrument, amount)
+    # Execute an operation with name +name+ and pass +args+ to it.
+    #
+    # @param name [String] operation name
+    # @param args [Array] operation arguments
+    # @return [void]
+    def execute(name, *args)
+      # TODO: make operation aliasing properly
+      if [:BUY, :SELL].include?(name)
+        args.unshift(name.to_s.downcase.to_sym)
+        name = :create_limit
+      end
+
+      op = Operation.build(name, inc_serial, Time.now, *args)
+      journal.record(op)
+      op.perform(@engine)
     end
 
-    # Operation: Withdraw amount of instrument from account.
-    op :WITHDRAW do |account_id, instrument, amount|
-      account(account_id).debit(instrument, amount)
-    end
-
-    # Operation: Create a LIMIT order.
-    op :CREATE_LMT do |account_id, direction, market_name, price, quantity, uuid|
-      account = account(account_id)
-      market = market(market_name)
-      order = supermarket.create_order account, market, direction, price, quantity, uuid
-      order.uuid
-    end
-
-    # Operation: Create a buy order.
-    op :BUY, log: false do |account_id, market_name, price, quantity|
-      execute(:CREATE_LMT, account_id, :buy, market_name, price, quantity, Util.uuid)
-    end
-
-    # Operation: Create a sell order.
-    op :SELL, log: false do |account_id, market_name, price, quantity|
-      execute(:CREATE_LMT, account_id, :sell, market_name, price, quantity, Util.uuid)
-    end
-
-    # Operation: Cancel an order.
-    op :CANCEL do |account_id, order_id|
-      account = account(account_id)
-      order = account.open_orders.find { |o| o.uuid == order_id }
-      supermarket.cancel_order order if order
+    # Execute an operation from journal.
+    #
+    # @param op [Operation]
+    # @return [void]
+    def execute_op(op)
+      op.perform(@engine)
     end
   end
 end

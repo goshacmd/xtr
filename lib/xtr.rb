@@ -1,7 +1,8 @@
 require 'logger'
-require 'active_support/dependencies/autoload'
 require 'active_support/core_ext/module/delegation'
+require 'active_support/core_ext/string/inflections'
 require 'active_support/concern'
+require 'active_support/dependencies/autoload'
 
 require 'xtr/core_ext/numeric'
 
@@ -23,7 +24,6 @@ module Xtr
   autoload :Market
   autoload :Operation
   autoload :OperationInterface
-  autoload :Operationable
   autoload :QueryInterface
   autoload :Queryable
   autoload :Reservation

@@ -7,8 +7,6 @@ module Xtr
   #     c.currency :BTC, :USD
   #   end
   class Engine
-    include Operationable
-
     attr_reader :supermarket, :balance_sheet, :instruments,
       :instrument_registry, :operation_interface, :query_interface, :journal
 
@@ -17,6 +15,8 @@ module Xtr
     delegate :account, to: :balance_sheet
     # @!method market
     # @see Supermarket#market
+    # @!method markets
+    # @see Supermarket#markets
     delegate :market, :markets, to: :supermarket
     # @!method execute
     # @see Operationable#execute
