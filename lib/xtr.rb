@@ -24,8 +24,8 @@ module Xtr
   autoload :Market
   autoload :Operation
   autoload :OperationInterface
+  autoload :Query
   autoload :QueryInterface
-  autoload :Queryable
   autoload :Reservation
   autoload :Supermarket
 

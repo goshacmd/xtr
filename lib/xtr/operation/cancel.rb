@@ -4,6 +4,8 @@ module Xtr
     class Cancel < Operation
       attr_reader :account_id, :order_id
 
+      # @param account_id [String]
+      # @param order_id [String]
       def initialize(serial, time, account_id, order_id)
         super
         @account_id = account_id

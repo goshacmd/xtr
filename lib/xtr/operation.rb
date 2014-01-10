@@ -36,6 +36,7 @@ module Xtr
       # Lookup operation with +name+.
       #
       # @param name [String]
+      # @return [Class]
       def lookup(name)
         const_get(name.to_s.downcase.camelize)
       rescue NameError
@@ -46,6 +47,7 @@ module Xtr
       #
       # @param name [String] operation name
       # @param args [Array] operation arguments
+      # @return [Operation]
       def build(name, *args)
         lookup(name).new(*args)
       end
