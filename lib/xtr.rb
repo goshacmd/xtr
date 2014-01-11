@@ -16,6 +16,7 @@ module Xtr
   autoload :Account
   autoload :BalanceCollection
   autoload :BalanceSheet
+  autoload :Building
   autoload :CashBalance
   autoload :Engine
   autoload :InstrumentRegistry

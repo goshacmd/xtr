@@ -1,30 +1,6 @@
 module Xtr
   # A registry of supported instruments.
   class InstrumentRegistry
-    class << self
-      # Convert a hash list of instrument names to a hash list
-      # of instrument instances.
-      #
-      # @param list [Hash{Symbol => Array<Symbol>}]
-      # @return [Hash{Symbol => Array<Instrument>}]
-      def build_instruments(list)
-        list.map do |category, sublist|
-          [category, build_instrument_sublist(category, sublist)]
-        end.to_h
-      end
-
-      # Given an instrument category and names list, build an
-      # array of instrument instances.
-      #
-      # @param category [Symbol] category name (+:currency+ or +:stock+)
-      # @param names [Array<Symbol>] list of instrument names
-      # @return [Array<Instrument>]
-      def build_instrument_sublist(category, names)
-        instrument = Instrument.for_type(category)
-        names.map { |name| instrument.new(name) }
-      end
-    end
-
     attr_reader :list
 
     delegate :[], to: :name_instrument
@@ -77,6 +53,19 @@ module Xtr
     # @param name [String]
     def supported?(name)
       name_instrument.has_key?(name)
+    end
+
+    class << self
+      # Convert a hash list of instrument names to a hash list
+      # of instrument instances.
+      #
+      # @param list [Hash{Symbol => Array<Symbol>}]
+      # @return [Hash{Symbol => Array<Instrument>}]
+      def build_instruments(list)
+        list.map do |category, sublist|
+          [category, Instrument.build_many(category, sublist)]
+        end.to_h
+      end
     end
   end
 end

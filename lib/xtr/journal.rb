@@ -3,17 +3,7 @@ module Xtr
   #
   # @abstract Subclass and override {#record} and {#replay}.
   class Journal
-    class << self
-      # Build a journal instance.
-      #
-      # @param type [String, Symbol] journal type
-      # @param args [Array] journal initializer arguments
-      # @return [Journal]
-      def build(type, *args)
-        klass = const_get(type.to_s.capitalize)
-        args.empty? ? klass.new : klass.new(*args)
-      end
-    end
+    extend Building
 
     # Record a user operation.
     #

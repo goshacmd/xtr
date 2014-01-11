@@ -10,17 +10,20 @@ module Xtr
   #   end
   class Instrument
     extend ActiveSupport::Autoload
+    extend Building
 
     autoload :Currency
     autoload :Stock
 
     class << self
-      # Get +Instrument+ class of specified +type+.
+      # Build many instruments.
       #
-      # @param type [String, Symbol] instrument type to get
-      # @return [Class] instrument class
-      def for_type(type)
-        const_get(type.to_s.capitalize)
+      # @param name [String] instrument name
+      # @param args [Array<Array>, Array<Object>] array of instrument argument arrays
+      # @return [Array<Instrument>]
+      def build_many(name, args)
+        klass = lookup(name)
+        args.map { |ary| klass.new(*Array(ary)) }
       end
 
       # Get/set the type of quantity of the instrument.

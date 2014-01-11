@@ -4,6 +4,7 @@ module Xtr
   # @abstract
   class Operation
     extend ActiveSupport::Autoload
+    extend Building
 
     autoload :Deposit
     autoload :Withdraw
@@ -30,27 +31,6 @@ module Xtr
 
     def perform(*args)
       execute(*args)
-    end
-
-    class << self
-      # Lookup operation with +name+.
-      #
-      # @param name [String]
-      # @return [Class]
-      def lookup(name)
-        const_get(name.to_s.downcase.camelize)
-      rescue NameError
-        raise NoSuchOperationError, "No operation named #{name} was found"
-      end
-
-      # Build operation.
-      #
-      # @param name [String] operation name
-      # @param args [Array] operation arguments
-      # @return [Operation]
-      def build(name, *args)
-        lookup(name).new(*args)
-      end
     end
   end
 end

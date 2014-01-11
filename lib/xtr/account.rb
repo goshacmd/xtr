@@ -27,7 +27,7 @@ module Xtr
     def balance(instrument)
       @balances[instrument]
     end
-    alias [] balance
+    alias_method :[], :balance
 
     # Delegate balance-related methods to balance for appropriate instrument.
     #
