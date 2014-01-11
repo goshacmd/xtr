@@ -23,6 +23,7 @@ module Xtr
     # Get an account's balance in specific instrument.
     #
     # @param instrument [Symbol] instrument code
+    # @see BalanceCollection#[]
     # @return [CashBalance]
     def balance(instrument)
       @balances[instrument]

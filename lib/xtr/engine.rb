@@ -42,7 +42,7 @@ module Xtr
 
       @instrument_registry = InstrumentRegistry.new(config.instruments)
       @journal = Journal.build(*config.journal)
-      @operation_interface = OperationInterface.new(self, @journal)
+      @operation_interface = OperationInterface.new(self, journal)
       @query_interface = QueryInterface.new(self)
 
       supermarket.build_markets(instrument_registry, config.markets)

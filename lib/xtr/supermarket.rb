@@ -22,7 +22,7 @@ module Xtr
     # @return [Hash{String => Market}]
     def build_markets(instruments, generators)
       inst = instruments.list
-      @markets = instruments.list.map do |(category, list)|
+      @markets = inst.map do |(category, list)|
         generator = generators[category]
         generator.call(list, inst).map do |left, right|
           left = instruments[left]
