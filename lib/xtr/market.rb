@@ -49,7 +49,8 @@ module Xtr
         bid: Util.number_to_string(bid),
         ask: Util.number_to_string(ask),
         spread: Util.number_to_string(spread),
-        last_price: Util.number_to_string(last_price)
+        last_price: Util.number_to_string(last_price),
+        time: Time.now.to_s
       }
     end
 
