@@ -195,11 +195,11 @@ module Xtr
       end
 
       def inspect
-        "#<#{self.class.name} market=#{market.pair} dir=#{direction} price=#{Util.number_to_string(price)} qty=#{Util.number_to_string(quantity)} remainder=#{Util.number_to_string(remainder)} id=#{uuid} account=#{account.uuid}>"
+        "#<#{self.class.name} market=#{market.name} dir=#{direction} price=#{Util.number_to_string(price)} qty=#{Util.number_to_string(quantity)} remainder=#{Util.number_to_string(remainder)} id=#{uuid} account=#{account.uuid}>"
       end
 
       def to_s
-        "(#{market.pair} #{Util.number_to_string(price)} x #{Util.number_to_string(quantity)} (left: #{Util.number_to_string(remainder)}), #{account.uuid})"
+        "(#{market.name} #{Util.number_to_string(price)} x #{Util.number_to_string(quantity)} (left: #{Util.number_to_string(remainder)}), #{account.uuid})"
       end
     end
   end

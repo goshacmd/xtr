@@ -57,7 +57,7 @@ module Xtr
     # Get a string code of the market.
     #
     # @return [String]
-    def pair
+    def name
       case type
       when :currency
         [@left.name, @right.name].join('/') # => BTC/USD
@@ -67,15 +67,15 @@ module Xtr
     end
 
     def as_json
-      { name: pair, type: type }
+      { name: name, type: type }
     end
 
     def to_s
-      pair
+      name
     end
 
     def inspect
-      "#<#{self.class.name} #{pair}>"
+      "#<#{self.class.name} #{name}>"
     end
   end
 end

@@ -29,7 +29,7 @@ module Xtr
           right = instruments[right]
           Market.new(category, left, right)
         end
-      end.flatten.map { |m| [m.pair, m] }.to_h
+      end.flatten.map { |m| [m.name, m] }.to_h
     end
 
     # Get a market for the instrument pair.
