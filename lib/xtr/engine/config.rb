@@ -81,6 +81,14 @@ module Xtr
         markets
         @markets[:stock] = block
       end
+
+      # Set resource market generator proc.
+      #
+      # @return [void]
+      def resource_markets(&block)
+        markets
+        @markets[:resource] = block
+      end
     end
   end
 end
