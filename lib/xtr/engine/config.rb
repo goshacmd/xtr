@@ -42,6 +42,15 @@ module Xtr
         @instruments[:stock] = list
       end
 
+      # Set resource instruments.
+      #
+      # @param list [Array<Symbol>] list of resource instrument names
+      # @return [void]
+      def resource(*list)
+        @instruments ||= {}
+        @instruments[:resource] = list
+      end
+
       # Set markets.
       #
       # @param desc [Hash{Symbol => Proc}]
@@ -49,8 +58,9 @@ module Xtr
       # @return [Hash{Symbol => Proc}]
       def markets(desc = nil)
         @markets ||= {
-          currency: ->(list, _) { list.combination(2) },
-          stock: ->(list, inst) { list.product(inst[:currency]) }
+          currency: -> list, _ { list.combination(2) },
+          stock: -> list, inst { list.product(inst[:currency]) },
+          resource: -> list, inst { list.product(inst[:currency]) }
         }
         @markets = desc if desc
         @markets

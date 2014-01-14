@@ -13,6 +13,7 @@ module Xtr
     extend Building
 
     autoload :Currency
+    autoload :Resource
     autoload :Stock
 
     class << self

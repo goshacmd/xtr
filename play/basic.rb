@@ -8,6 +8,7 @@ Xtr.logger = Logger.new STDOUT
 engine = Xtr::Engine.new do |c|
   c.currency :BTC, :USD
   c.stock :AAPL, :GOOG, :V
+  c.resource :GOLD, :SILVER, :OIL
 
   c.stock_markets do |list, _|
     list.product([:USD])

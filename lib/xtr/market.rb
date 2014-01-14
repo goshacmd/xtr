@@ -28,7 +28,7 @@ module Xtr
 
     # Initialize a new +Market+.
     #
-    # @param type [Symbol] market type (+:currency+ or +:stock+)
+    # @param type [Symbol] market type (+:currency+, +:stock+ or +:resource+)
     # @param left [Instrument] left instrument
     # @param right [Instrument] right instrument
     def initialize(type, left, right)
@@ -61,7 +61,7 @@ module Xtr
       case type
       when :currency
         [@left.name, @right.name].join('/') # => BTC/USD
-      when :stock
+      when :stock, :resource
         [@right.name, @left.name].join(':') # => USD:AAPL
       end
     end
