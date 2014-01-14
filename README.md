@@ -38,12 +38,14 @@ Each balance has available and reserved amounts.
 
 To get started, you would need to instantiate an engine and specify
 instruments you want it to support. Instruments are broken down by
-category. At the moment, xtr supports currency and stock instruments.
+category. At the moment, xtr supports currency, stock, and resource
+instruments.
 
 ```ruby
 engine = Xtr::Engine.new do |c|
-  c.currency :BTC, :USD, :EUR
-  c.stock :AAPL, :GOOG, :TWTR, :V
+  c.currency :BTC, :USD
+  c.stock :AAPL, :TWTR
+  c.resource :SILVER
 end
 ```
 
@@ -56,21 +58,17 @@ In this example, the following markets will be generated:
 * currency
   * BTC/USD
   * BTC/EUR
-  * USD/EUR
 
 * stock
   * BTC:AAPL
   * USD:AAPL
-  * EUR:AAPL
-  * BTC:GOOG
-  * USD:GOOG
-  * EUR:GOOG
   * BTC:TWTR
   * USD:TWTR
   * EUR:TWTR
-  * BTC:V
-  * USD:V
-  * EUR:V
+
+* resource
+  * BTC:SILVER
+  * USD:SILVER
 
 ### Markets
 
@@ -177,6 +175,58 @@ engine.query :OPEN_ORDERS, account
 #    }]
 ```
 
+## Journaling
+
+It's possible to have xtr journal every user operation and replay the
+log when the engine restarts.
+
+By default, xtr does not journal anything. You can configure it to
+journal to a file:
+
+```ruby
+engine = Xtr::Engine.new do |c|
+  # instrument descriptions
+
+  c.journal :file, "path/to/file.journal"
+end
+```
+
+And make sure to replay the log right after initializing the engine:
+
+```ruby
+engine.replay
+```
+
+## Tweaking market generation
+
+By default, xtr would generate markets for all currency pairs, and for
+all stock-currency and resource-currency pairs. You can customize it
+though.
+
+All you need to do is to pass market generators to the engine
+initializer.
+
+Market generator is a proc that takes a list of instruments in specific
+category (currency, stock, resource) and a hash of all instruments and
+returns an array of instrument pair.
+
+The default generators are like this:
+
+```ruby
+currency_gen = -> list, _ { list.combination(2) } # currency pairs
+stock_gen = -> list, inst { list.product(inst[:currency]) } #
+stock-currency pairs; resource gen is the same
+```
+
+You can set your own generators:
+
+```ruby
+engine = Xtr::Engine.new do |c|
+  # instruments...
+
+  c.stock_markets { |list, _| list.product([:USD]) }
+end
+```
 
 ## TODO
 
