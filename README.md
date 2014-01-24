@@ -39,7 +39,7 @@ Each balance has available and reserved amounts.
 To get started, you would need to instantiate an engine and specify
 instruments you want it to support. Instruments are broken down by
 category. At the moment, xtr supports currency, stock, and resource
-instruments.
+instruments:
 
 ```ruby
 engine = Xtr::Engine.new do |c|
@@ -230,8 +230,8 @@ end
 
 ## TODO
 
-* other order types (market, stop-loss, take-profit, fill-or-kill)
 * margin trading
+* other order types (market, stop-loss, take-profit, fill-or-kill)
 * derivative instruments (CFDs, futures, options)
 * event sourcing & persistence
 * snapshots
